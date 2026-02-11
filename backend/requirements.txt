@@ -1,0 +1,19 @@
+# ─── Core Framework ──────────────────────────────
+crewai[google-genai]
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+
+# ─── Animation & Video ───────────────────────────
+manim
+moviepy
+ffmpeg-python
+
+# ─── Content Extraction ──────────────────────────
+pymupdf
+pytesseract
+Pillow
+
+# ─── Text-to-Speech ─────────────────────────────
+lmnt

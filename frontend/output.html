@@ -1,0 +1,238 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>GRANITE | Generation Complete</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#0df233",
+              "background-light": "#f5f8f6",
+              "background-dark": "#000000",
+              "neutral-900": "#0a0c0a",
+              "neutral-800": "#151815",
+              "neutral-700": "#2a2e2a",
+            },
+            fontFamily: {
+              display: ["Space Grotesk", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "1rem",
+              lg: "2rem",
+              xl: "3rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-image:
+          linear-gradient(rgba(13, 242, 51, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(13, 242, 51, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark font-display text-white min-h-screen selection:bg-primary selection:text-black"
+  >
+    <!-- Navigation Bar -->
+    <nav
+      class="border-b border-white/10 px-8 py-6 flex items-center justify-between sticky top-0 bg-background-dark/80 backdrop-blur-md z-50"
+    >
+      <div class="flex items-center gap-12">
+        <div class="flex items-center gap-2">
+          <div
+            class="w-8 h-8 bg-primary rounded-sm flex items-center justify-center"
+          >
+            <span class="material-icons text-black font-bold"
+              >Auto_awesome</span
+            >
+          </div>
+          <span class="text-2xl font-bold tracking-tighter">GRANITE</span>
+        </div>
+        <div class="flex items-center gap-4 text-sm font-medium">
+          <a
+            href="dashboard.html"
+            class="text-white/40 hover:text-white cursor-pointer transition-colors"
+            >DASHBOARD</a
+          >
+          <span class="text-white/40"
+            ><span class="material-icons text-xs">chevron_right</span></span
+          >
+          <span class="text-primary uppercase tracking-widest">Output</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="flex -space-x-2">
+          <img
+            class="w-10 h-10 rounded-full border-2 border-background-dark object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_z_nhALl588a3WsS33Qu6v4thIAgyguTr8oMJpLxM5IuUzYLjW10FmzfTrQGapRZJuusc7HHPIDbSAY5uagVg1QA_aERK459MltEhvdaN6O0269FRqch8crxkGTyxIp6E40z4yKR5n36IQQT_l6gPtUY1Z84RBs1fxXr2WRBqBHM3eV6RhhbRtin6Vb8ZiD4eM7L1RWXZe4UKPufY2SmBrFbV4RrStkFLtIxlThS07OmgNOL0V6tttWPO-D05sZo0yh63utaHfNc"
+          />
+        </div>
+      </div>
+    </nav>
+
+    <main class="max-w-[1512px] mx-auto px-12 py-12">
+      <header class="mb-12 flex justify-between items-end">
+        <div>
+          <span
+            class="text-primary font-bold text-sm tracking-[0.3em] uppercase block mb-2"
+            >Generation Complete</span
+          >
+          <h1
+            class="text-6xl font-bold tracking-tighter mb-4"
+            id="project-title"
+          >
+            Project Output
+          </h1>
+          <p class="text-white/40 text-lg">
+            Your video has been synthesized and is ready for deployment.
+          </p>
+        </div>
+        <div class="flex gap-4">
+          <button
+            class="px-6 py-3 border border-white/10 rounded-full hover:bg-white/5 transition-all flex items-center gap-2"
+          >
+            <span class="material-icons text-sm">share</span> Share
+          </button>
+          <button
+            class="px-6 py-3 bg-primary text-black rounded-full font-bold hover:scale-105 transition-all flex items-center gap-2"
+          >
+            <span class="material-icons text-sm">download</span> Download
+          </button>
+        </div>
+      </header>
+
+      <!-- Video Player Placeholder -->
+      <div
+        class="w-full aspect-video bg-neutral-900 rounded-2xl border-2 border-white/10 relative overflow-hidden group shadow-2xl shadow-primary/5"
+      >
+        <!-- Simulated Video Content -->
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc3WMp3-6lc47KC035BoiqNqe7VkO9zCaJ1PuVZ21lPEPOLLEqGKxEyKa4vkzHkX93dXPBNPr2n9CpjwTnkoAqEsP55fEIhlf0ACgrKQqpXWCuiQyPMTMRwmTLN8aaJijlsG1nvXMnrpbOqSM8z38MHoYZ1x4V_kNZrVTnbddR1OxAZA1c_qQz-Fg858K4HnIfIMH-7NIxd9_PDPhY0YRQfwknXXOs2l7mBBKx-YxBUAw5-vFMPvPzsIcP9mGrCnTRIWWCOk8bhKM"
+          alt="Generated Video Frame"
+          class="w-full h-full object-cover opacity-60"
+        />
+
+        <div class="absolute inset-0 flex items-center justify-center">
+          <button
+            class="w-24 h-24 bg-primary/90 text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover:bg-primary shadow-[0_0_50px_rgba(13,242,51,0.5)]"
+          >
+            <span class="material-icons text-5xl ml-2">play_arrow</span>
+          </button>
+        </div>
+
+        <!-- Progress/Controls Bar -->
+        <div
+          class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-mono">00:00 / 02:45</span>
+            <div class="flex gap-4">
+              <span
+                class="material-icons text-white hover:text-primary cursor-pointer"
+                >volume_up</span
+              >
+              <span
+                class="material-icons text-white hover:text-primary cursor-pointer"
+                >settings</span
+              >
+              <span
+                class="material-icons text-white hover:text-primary cursor-pointer"
+                >fullscreen</span
+              >
+            </div>
+          </div>
+          <div
+            class="w-full h-1 bg-white/20 rounded-full overflow-hidden cursor-pointer"
+          >
+            <div class="w-[0%] h-full bg-primary relative">
+              <div
+                class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metadata / Info -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div class="bg-neutral-900 border border-white/5 p-6 rounded-xl">
+          <h3
+            class="text-white/40 text-xs font-bold uppercase tracking-widest mb-4"
+          >
+            Prompt Used
+          </h3>
+          <p class="text-lg leading-relaxed font-light">
+            "A cinematic documentary exploring the neon-lit streets of 2077
+            Tokyo..."
+          </p>
+        </div>
+        <div class="bg-neutral-900 border border-white/5 p-6 rounded-xl">
+          <h3
+            class="text-white/40 text-xs font-bold uppercase tracking-widest mb-4"
+          >
+            Technical Stats
+          </h3>
+          <div class="space-y-4">
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-white/60">Resolution</span>
+              <span class="font-mono text-primary">4K (3840x2160)</span>
+            </div>
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-white/60">Frame Rate</span>
+              <span class="font-mono text-primary">60fps</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/60">Render Time</span>
+              <span class="font-mono text-primary">1m 42s</span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-neutral-900 border border-white/5 p-6 rounded-xl flex flex-col justify-center items-center text-center"
+        >
+          <div
+            class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary"
+          >
+            <span class="material-icons text-3xl">verified</span>
+          </div>
+          <h3 class="font-bold text-xl mb-1">Verification Passed</h3>
+          <p class="text-white/40 text-sm">
+            Content adheres to safety guidelines and brand voice.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Background Decoration -->
+    <div
+      class="fixed top-0 right-0 -z-10 w-[800px] h-[800px] bg-primary/5 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2"
+    ></div>
+    <div
+      class="fixed bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-primary/5 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2"
+    ></div>
+  </body>
+</html>

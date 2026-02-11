@@ -1,0 +1,308 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>GRANITE | Secure Login</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              neon: "#C1FF72",
+              primary: "#FFFFFF",
+              "background-dark": "#000000",
+              silver: {
+                500: "#8E8E93",
+                700: "#3A3A3C",
+                800: "#1C1C1E",
+                900: "#0A0A0A",
+              },
+            },
+            fontFamily: {
+              display: ["Space Grotesk", "sans-serif"],
+              sans: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              xl: "1rem",
+              "2xl": "1.5rem",
+              "3xl": "2rem",
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      :root {
+        --neon-glow: rgba(193, 255, 114, 0.15);
+      }
+      .glow-card {
+        box-shadow: 0 0 40px -10px var(--neon-glow);
+        border: 1px solid rgba(193, 255, 114, 0.1);
+      }
+      .liquid-metal-container {
+        position: relative;
+        overflow: hidden;
+        background: #000;
+      }
+      .liquid-metal-container::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 50%,
+          transparent 0%,
+          #000 80%
+        );
+      }
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0.05;
+        z-index: 50;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+      .sharp-input {
+        @apply w-full px-5 py-4 bg-silver-900 border border-silver-700 text-white placeholder:text-silver-500 focus:outline-none focus:border-neon transition-all duration-200 rounded-xl;
+      }
+      .neon-btn {
+        @apply w-full bg-neon text-black py-4 px-8 font-bold tracking-tight text-sm hover:brightness-110 active:scale-[0.98] transition-all duration-200 rounded-xl flex items-center justify-center gap-2;
+      }
+      .secondary-btn {
+        @apply w-full bg-silver-800 border border-silver-700 text-white py-4 px-8 font-semibold tracking-tight text-sm hover:bg-silver-700 transition-all duration-200 rounded-xl flex items-center justify-center gap-3;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-dark text-white font-sans selection:bg-neon selection:text-black antialiased"
+  >
+    <div class="noise-overlay"></div>
+    <main class="min-h-screen flex flex-col lg:flex-row overflow-hidden">
+      <section
+        class="lg:w-[50%] relative liquid-metal-container hidden lg:flex items-center justify-center"
+      >
+        <div class="absolute inset-0 flex items-center justify-center z-0">
+          <img
+            alt="Abstract liquid metal chrome object"
+            class="w-full h-full object-cover opacity-80 mix-blend-lighten scale-110"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1HF7UrWSoPP5xPDV2A8Jrmowouqz9hCBxvQsC6bh7-hd6HhWPPHZc3B5oXB7LOIuSCqW32NHRjOh8GgVzVPzbfYeTBOWY8fAGrML7aVmJREizof27KQkmgOULkUuCKE7dvLmub1s2RMCWPi0CabWDKRXWgsmDqxfhCR-H-BOv6kHYccNck8FiniZueWXtsxtz7aKNMUdL-EiaVI72NeiBraGzBTzzaXeBfJ3DwJOeuLpPBCtU6KDVZEMbOl6IMtp0BT0P4uANPfM"
+          />
+        </div>
+        <div class="absolute top-12 left-12 z-10">
+          <div class="flex items-center gap-3">
+            <span
+              class="w-2 h-2 rounded-full bg-neon shadow-[0_0_8px_#C1FF72]"
+            ></span>
+            <span
+              class="text-[11px] tracking-[0.3em] text-white/40 uppercase font-medium"
+              >Core Intelligence Protocol</span
+            >
+          </div>
+        </div>
+        <div class="absolute bottom-12 left-12 z-10 max-w-sm">
+          <div class="h-[2px] w-8 bg-neon mb-6"></div>
+          <p
+            class="text-[13px] text-silver-500 leading-relaxed uppercase tracking-[0.15em] font-medium"
+          >
+            Pioneering the evolution of documentation through high-fidelity
+            neural synthesis.
+          </p>
+        </div>
+      </section>
+      <section
+        class="lg:w-[50%] w-full flex flex-col justify-center items-center p-6 lg:p-20 relative z-10 bg-black"
+      >
+        <div class="w-full max-w-lg">
+          <header class="flex flex-col mb-16">
+            <h1
+              class="text-7xl lg:text-8xl font-display font-black tracking-[-0.04em] text-white mb-2 leading-none"
+            >
+              GRANITE
+            </h1>
+            <div class="flex items-center justify-between">
+              <p class="text-silver-500 text-sm tracking-wide">
+                Secure Laboratory Access
+              </p>
+              <div
+                class="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10"
+              >
+                <span
+                  class="w-1.5 h-1.5 rounded-full bg-neon animate-pulse"
+                ></span>
+                <span
+                  class="text-[10px] uppercase tracking-widest text-white/80 font-bold"
+                  >Node 01 Active</span
+                >
+              </div>
+            </div>
+          </header>
+          <div
+            class="glow-card bg-[#050505] p-8 lg:p-12 rounded-3xl border border-white/5"
+          >
+            <div class="mb-10">
+              <h2 class="text-2xl font-semibold tracking-tight text-white mb-2">
+                Initialize Session
+              </h2>
+              <p class="text-silver-500 text-sm">
+                Enter authorized credentials to continue.
+              </p>
+            </div>
+            <form class="space-y-6" id="loginForm">
+              <div class="space-y-2">
+                <label
+                  class="text-[11px] uppercase tracking-widest text-silver-500 font-bold ml-1"
+                  for="email"
+                  >Researcher Identity</label
+                >
+                <input
+                  class="sharp-input"
+                  id="email"
+                  placeholder="identity@granite.ai"
+                  type="email"
+                />
+              </div>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center ml-1">
+                  <label
+                    class="text-[11px] uppercase tracking-widest text-silver-500 font-bold"
+                    for="password"
+                    >Access Key</label
+                  >
+                  <a
+                    class="text-[11px] uppercase tracking-widest text-neon/60 hover:text-neon transition-colors font-bold"
+                    href="#"
+                    >Lost Key?</a
+                  >
+                </div>
+                <input
+                  class="sharp-input"
+                  id="password"
+                  placeholder="••••••••••••"
+                  type="password"
+                />
+              </div>
+              <div class="pt-4 flex flex-col gap-4">
+                <button class="neon-btn" type="submit">
+                  <span>AUTHORIZE ACCESS</span>
+                  <span class="material-symbols-outlined text-lg"
+                    >arrow_forward</span
+                  >
+                </button>
+                <div class="relative py-2">
+                  <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-white/5"></div>
+                  </div>
+                  <div
+                    class="relative flex justify-center text-[10px] uppercase tracking-widest"
+                  >
+                    <span class="bg-[#050505] px-4 text-silver-700 font-bold"
+                      >Verification Proxy</span
+                    >
+                  </div>
+                </div>
+                <button class="secondary-btn" type="button">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      fill="#FFFFFF"
+                    ></path>
+                    <path
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      fill="#FFFFFF"
+                      opacity="0.5"
+                    ></path>
+                    <path
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                      fill="#FFFFFF"
+                      opacity="0.3"
+                    ></path>
+                    <path
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                      fill="#FFFFFF"
+                      opacity="0.5"
+                    ></path>
+                  </svg>
+                  <span>Connect via SSO</span>
+                </button>
+              </div>
+            </form>
+            <div class="mt-10 pt-8 border-t border-white/5 text-center">
+              <p class="text-[11px] uppercase tracking-[0.2em] text-silver-500">
+                New Instance?
+                <a class="text-neon font-bold hover:underline ml-1" href="#"
+                  >Request Token</a
+                >
+              </p>
+            </div>
+          </div>
+          <footer
+            class="mt-12 flex flex-col md:flex-row justify-between items-center gap-6 opacity-40 hover:opacity-100 transition-opacity duration-500"
+          >
+            <div
+              class="flex flex-col gap-1 items-center md:items-start text-center md:text-left"
+            >
+              <span class="text-[10px] uppercase tracking-widest font-bold"
+                >© 2025 Granite AI Labs</span
+              >
+              <span class="text-[9px] uppercase tracking-widest"
+                >Neural Assets Encrypted v4.2</span
+              >
+            </div>
+            <div class="flex gap-8">
+              <a
+                class="text-[10px] uppercase tracking-widest hover:text-neon transition-colors font-bold"
+                href="#"
+                >Security</a
+              >
+              <a
+                class="text-[10px] uppercase tracking-widest hover:text-neon transition-colors font-bold"
+                href="#"
+                >Privacy</a
+              >
+              <a
+                class="text-[10px] uppercase tracking-widest hover:text-neon transition-colors font-bold"
+                href="#"
+                >Terms</a
+              >
+            </div>
+          </footer>
+        </div>
+      </section>
+    </main>
+    <script>
+      const container = document.querySelector(".liquid-metal-container");
+      if (container) {
+        container.addEventListener("mousemove", (e) => {
+          const img = container.querySelector("img");
+          const moveX = (window.innerWidth / 4 - e.pageX) / 40;
+          const moveY = (window.innerHeight / 2 - e.pageY) / 40;
+          img.style.transform = `scale(1.15) translate(${moveX}px, ${moveY}px)`;
+          img.style.transition = "transform 0.1s ease-out";
+        });
+        container.addEventListener("mouseleave", () => {
+          const img = container.querySelector("img");
+          img.style.transform = `scale(1.1) translate(0px, 0px)`;
+          img.style.transition = "transform 0.8s ease-in-out";
+        });
+      }
+    </script>
+  </body>
+</html>

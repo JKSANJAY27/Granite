@@ -1,0 +1,512 @@
+<!doctype html>
+
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>GRANITE Library Redesign</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#0df233",
+              "background-light": "#f5f8f6",
+              "background-dark": "#102213", // Adjusted for theme consistency while keeping the "pitch black" vibe as dark-950
+              surface: "#161d18",
+            },
+            fontFamily: {
+              display: ["Space Grotesk"],
+            },
+            borderRadius: {
+              DEFAULT: "1rem",
+              lg: "2rem",
+              xl: "3rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #000000; /* Overriding for the specific GRANITE pitch-black aesthetic */
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #000;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #0df233;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body
+    class="font-display text-white selection:bg-primary selection:text-black"
+  >
+    <!-- Top-Bar Pill Navigation -->
+    <nav class="fixed top-8 left-1/2 -translate-x-1/2 z-50">
+      <div
+        class="bg-surface/80 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 flex items-center gap-8 shadow-2xl"
+      >
+        <a
+          href="homepage.html"
+          class="flex items-center gap-2 hover:opacity-80 transition-opacity"
+        >
+          <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
+          <span class="font-bold tracking-tighter text-xl">GRANITE</span>
+        </a>
+        <div class="flex items-center gap-6 text-sm font-medium text-white/60">
+          <a class="hover:text-primary transition-colors" href="dashboard.html"
+            >Home</a
+          >
+          <a class="text-primary" href="library.html">Library</a>
+          <a class="hover:text-primary transition-colors" href="create.html"
+            >Create</a
+          >
+        </div>
+        <div class="h-6 w-[1px] bg-white/10"></div>
+        <button
+          class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
+        >
+          <span class="material-icons text-lg">person</span>
+        </button>
+      </div>
+    </nav>
+    <main class="max-w-[1512px] mx-auto pt-32 px-12 pb-20">
+      <!-- Header Section -->
+      <div
+        class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16"
+      >
+        <div>
+          <h1 class="text-8xl font-bold tracking-tighter leading-none mb-4">
+            LIBRARY
+          </h1>
+          <p class="text-white/40 text-lg max-w-md">
+            Manage your AI-generated sequences and cinematic projects in one
+            modular workspace.
+          </p>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="relative group">
+            <span
+              class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-primary transition-colors"
+              >search</span
+            >
+            <input
+              class="bg-surface border-white/10 rounded-full pl-12 pr-6 py-4 w-80 focus:ring-1 focus:ring-primary focus:border-primary bg-transparent text-sm"
+              placeholder="Search projects..."
+              type="text"
+            />
+          </div>
+          <a
+            href="create.html"
+            class="bg-primary text-black font-bold px-8 py-4 rounded-full flex items-center gap-2 hover:scale-105 transition-transform"
+          >
+            <span class="material-icons">add</span>
+            <span>NEW PROJECT</span>
+          </a>
+        </div>
+      </div>
+      <!-- Filters Pill Row -->
+      <div
+        class="flex items-center gap-3 mb-12 overflow-x-auto pb-4 custom-scrollbar"
+      >
+        <button
+          class="bg-primary/20 border border-primary/30 text-primary px-6 py-2 rounded-full text-sm font-medium"
+        >
+          All Projects
+        </button>
+        <button
+          class="bg-surface border border-white/5 text-white/50 px-6 py-2 rounded-full text-sm font-medium hover:border-white/20 transition-colors"
+        >
+          Recent
+        </button>
+        <button
+          class="bg-surface border border-white/5 text-white/50 px-6 py-2 rounded-full text-sm font-medium hover:border-white/20 transition-colors"
+        >
+          Cinematics
+        </button>
+        <button
+          class="bg-surface border border-white/5 text-white/50 px-6 py-2 rounded-full text-sm font-medium hover:border-white/20 transition-colors"
+        >
+          Drafts
+        </button>
+        <button
+          class="bg-surface border border-white/5 text-white/50 px-6 py-2 rounded-full text-sm font-medium hover:border-white/20 transition-colors"
+        >
+          Archived
+        </button>
+        <div class="ml-auto flex items-center gap-2 text-white/30 text-sm">
+          <span>View:</span>
+          <button class="material-icons text-primary">grid_view</button>
+          <button class="material-icons hover:text-white transition-colors">
+            list
+          </button>
+        </div>
+      </div>
+      <!-- Grid of Modular Cards -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+      >
+        <!-- Project Card 1 -->
+        <div
+          class="group relative bg-surface border border-white/5 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
+        >
+          <div class="aspect-video relative overflow-hidden">
+            <img
+              alt="Cyberpunk City"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              data-alt="Cyberpunk futuristic city at night with neon lights"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc3WMp3-6lc47KC035BoiqNqe7VkO9zCaJ1PuVZ21lPEPOLLEqGKxEyKa4vkzHkX93dXPBNPr2n9CpjwTnkoAqEsP55fEIhlf0ACgrKQqpXWCuiQyPMTMRwmTLN8aaJijlsG1nvXMnrpbOqSM8z38MHoYZ1x4V_kNZrVTnbddR1OxAZA1c_qQz-Fg858K4HnIfIMH-7NIxd9_PDPhY0YRQfwknXXOs2l7mBBKx-YxBUAw5-vFMPvPzsIcP9mGrCnTRIWWCOk8bhKM"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"
+            ></div>
+            <div class="absolute top-4 left-4">
+              <span
+                class="bg-primary text-black text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1"
+              >
+                <span class="w-1.5 h-1.5 bg-black rounded-full"></span>
+                COMPLETED
+              </span>
+            </div>
+            <button
+              class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-primary text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300 shadow-xl shadow-primary/20"
+            >
+              <span class="material-icons">play_arrow</span>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+              <h3
+                class="font-bold text-lg group-hover:text-primary transition-colors uppercase tracking-tight"
+              >
+                Neon Descent 01
+              </h3>
+              <span class="text-[10px] text-white/30 font-medium">02:45</span>
+            </div>
+            <div
+              class="flex items-center justify-between text-xs text-white/40"
+            >
+              <span>Updated 2h ago</span>
+              <div class="flex gap-2">
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">share</span>
+                </button>
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">more_vert</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Project Card 2 -->
+        <div
+          class="group relative bg-surface border border-white/5 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
+        >
+          <div class="aspect-video relative overflow-hidden">
+            <img
+              alt="Deep Space"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              data-alt="Abstract nebula space scene with green and blue gases"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK43Zs2ES1I4MOm_mB8HE6w7WYSUulK2bMFfabpd-xK9zSxr86a8BAgZqdbW4XShfWtMXFU2MdmzB2FtK1hH8OQ1mFaOLuxioEuFBaVNm9T8eVd_9llNyZ4umjcrYID0a_if9KCJT1okj2W__zp2QXBBuss3wcrm_NTA1FCbKP85mahBLbt2RPj-Awsbs5MvM99dq5KcTopQxYBJhz5YXPfOpzxCvuxAMBBuhM4WEirPnHvRReNXPeUAYNbRrq57s0rUZSKlhcNa4"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"
+            ></div>
+            <div class="absolute top-4 left-4">
+              <span
+                class="bg-white/10 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full border border-white/20 flex items-center gap-1"
+              >
+                <span
+                  class="w-1.5 h-1.5 bg-white/50 rounded-full animate-pulse"
+                ></span>
+                RENDERING 82%
+              </span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+              <h3
+                class="font-bold text-lg group-hover:text-primary transition-colors uppercase tracking-tight"
+              >
+                Void Architect
+              </h3>
+              <span class="text-[10px] text-white/30 font-medium">--:--</span>
+            </div>
+            <div
+              class="w-full bg-white/5 h-1 rounded-full mb-4 overflow-hidden"
+            >
+              <div class="bg-primary h-full w-[82%]"></div>
+            </div>
+            <div
+              class="flex items-center justify-between text-xs text-white/40"
+            >
+              <span>Updated 12m ago</span>
+              <div class="flex gap-2">
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">close</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Project Card 3 -->
+        <div
+          class="group relative bg-surface border border-white/5 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
+        >
+          <div class="aspect-video relative overflow-hidden">
+            <img
+              alt="Tech Studio"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              data-alt="Sleek modern hardware and electronic circuit boards"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj2u7c5TZrIv4FvMKFXASQ2eAoC6VtOge5EDgGJGzDY9d2i_5evNIGBRXLyy91rbiDPuHp_N92RebCTfsSe-gGMe6XhcbknIsQvDYTjqf7mMMzevakddWF4838arkB3Efb-fxOrNZNUB4r5iPwSfBAc8LY0K0XUSlL2PAeEwFrOYQmeG23NsmBnikxAZ7XvYoqJ3-cPBcRuHI5_AxuHZQKJ13jmX3o-4og_ScLP0Uk-DeqCUZcxwugVIHJY3s2KKmXlZ2YeM1PxiA"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"
+            ></div>
+            <div class="absolute top-4 left-4">
+              <span
+                class="bg-primary text-black text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1"
+              >
+                <span class="w-1.5 h-1.5 bg-black rounded-full"></span>
+                COMPLETED
+              </span>
+            </div>
+            <button
+              class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-primary text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300 shadow-xl shadow-primary/20"
+            >
+              <span class="material-icons">play_arrow</span>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+              <h3
+                class="font-bold text-lg group-hover:text-primary transition-colors uppercase tracking-tight"
+              >
+                Silicon Dreams
+              </h3>
+              <span class="text-[10px] text-white/30 font-medium">01:12</span>
+            </div>
+            <div
+              class="flex items-center justify-between text-xs text-white/40"
+            >
+              <span>Updated yesterday</span>
+              <div class="flex gap-2">
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">share</span>
+                </button>
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">more_vert</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Project Card 4 -->
+        <div
+          class="group relative bg-surface border border-white/5 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
+        >
+          <div class="aspect-video relative overflow-hidden">
+            <img
+              alt="Dark Landscape"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              data-alt="Monochromatic dark desert landscape with star trails"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqR4Wb6GDBNXr8-nM_8nS687QaLYR2llljIVhyItggMmr_vfBerENQPRhncfXSo-85bd3hULQD4RskbNpR2fBFVJTkMkayvzXWtfi3QLodhhhFptpkyEjcgpxWG4RGL9PShHFaIH-0b2OckRMkmS8sNvg9NMU43v5cdHr4y0HqcuuZIF_BcolU7UomterNle17OPrB1papUVX_1I8Gp5EhOxaSNkHr_GK0kQkOESYqWfnCZ_IcPJM-CpRV3A9wNnnlqcDlxYHr2Ko"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"
+            ></div>
+            <div class="absolute top-4 left-4">
+              <span
+                class="bg-white/5 border border-white/10 text-white/40 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1"
+              >
+                DRAFT
+              </span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+              <h3
+                class="font-bold text-lg group-hover:text-primary transition-colors uppercase tracking-tight"
+              >
+                Midnight Echoes
+              </h3>
+              <span class="text-[10px] text-white/30 font-medium">--:--</span>
+            </div>
+            <div
+              class="flex items-center justify-between text-xs text-white/40"
+            >
+              <span>Updated 3d ago</span>
+              <div class="flex gap-2">
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">edit</span>
+                </button>
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">delete_outline</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Project Card 5 -->
+        <div
+          class="group relative bg-surface border border-white/5 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
+        >
+          <div class="aspect-video relative overflow-hidden">
+            <img
+              alt="Digital Earth"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              data-alt="Globe constructed from glowing blue and green data points"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA81kabo9GAO969O51jLqvLgLNf7ZV2AZGJgUKME6fO85RGse2-FOdyy_o-sgudJ2tl2sCArZZIMBaUKKa2Sld80gUhrqnyF5ZApsA0eIiNVD6uhu4nmOtMF6As_6b5EdXzaW4vz-sMbSmtjg3IdRdd4NwQXQoWXp11z1dwArUD1K0BaHxt1U3bxnVyVRHlYspkxIPU4IhnHBfLjVxPxBraF8JJzyOyX_E27tocoNG_lF2s6s8PVThq8iG0A9yGt0LJGj3t8t9yNfw"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"
+            ></div>
+            <div class="absolute top-4 left-4">
+              <span
+                class="bg-primary text-black text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1"
+              >
+                <span class="w-1.5 h-1.5 bg-black rounded-full"></span>
+                COMPLETED
+              </span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+              <h3
+                class="font-bold text-lg group-hover:text-primary transition-colors uppercase tracking-tight"
+              >
+                Global Pulse
+              </h3>
+              <span class="text-[10px] text-white/30 font-medium">04:20</span>
+            </div>
+            <div
+              class="flex items-center justify-between text-xs text-white/40"
+            >
+              <span>Updated 4d ago</span>
+              <div class="flex gap-2">
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">share</span>
+                </button>
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">more_vert</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Project Card 6 -->
+        <div
+          class="group relative bg-surface border border-white/5 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
+        >
+          <div class="aspect-video relative overflow-hidden">
+            <img
+              alt="CPU"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              data-alt="Close up of a glowing green computer processor"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmPRrgmwMpVmiH0Yl1OppGaXTKrskKNtQO5DoN8dZrsmKExQbM4ezeZpBdgf8DKenwD-u4ChtDWiva9hQ6GUErQ5l1-3DFbWbC_xIwWgjcVdy5t0GvTYfIpR8Ou-tLPoTka2htwiy7UX9ZHm8NuxL7YGoX8EhmqKSemMibtPDhZyk_h_gUGNU2_8JyRrGt4k7H_nWiv_X_Er8Zw0KAraaBVKJWFsySYsksGLO77PQOx5BkMgOPmRjLBOCHqGX6PxWBx-6yJw3f1gI"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"
+            ></div>
+            <div class="absolute top-4 left-4">
+              <span
+                class="bg-primary text-black text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1"
+              >
+                <span class="w-1.5 h-1.5 bg-black rounded-full"></span>
+                COMPLETED
+              </span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+              <h3
+                class="font-bold text-lg group-hover:text-primary transition-colors uppercase tracking-tight"
+              >
+                Logic Gates
+              </h3>
+              <span class="text-[10px] text-white/30 font-medium">00:58</span>
+            </div>
+            <div
+              class="flex items-center justify-between text-xs text-white/40"
+            >
+              <span>Updated 1w ago</span>
+              <div class="flex gap-2">
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">share</span>
+                </button>
+                <button class="hover:text-white transition-colors">
+                  <span class="material-icons text-sm">more_vert</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Empty State / New Project Placeholder -->
+        <div
+          class="group relative border-2 border-dashed border-white/10 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 flex flex-col items-center justify-center min-h-[300px] cursor-pointer bg-white/5 hover:bg-primary/5"
+        >
+          <div
+            class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-black transition-colors"
+          >
+            <span class="material-icons text-3xl">add</span>
+          </div>
+          <span
+            class="font-bold text-white/40 group-hover:text-white uppercase tracking-widest text-sm"
+            >Create New</span
+          >
+        </div>
+      </div>
+      <!-- Footer / Stats -->
+      <div
+        class="mt-20 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-white/30 text-xs"
+      >
+        <div class="flex items-center gap-8 mb-4 md:mb-0">
+          <div class="flex items-center gap-2">
+            <span class="text-primary font-bold">128</span>
+            <span>Total Projects</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-primary font-bold">14.2 GB</span>
+            <span>Storage Used</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <a class="hover:text-white transition-colors" href="#"
+            >Documentation</a
+          >
+          <a class="hover:text-white transition-colors" href="#">API Status</a>
+          <a class="hover:text-white transition-colors" href="#">Privacy</a>
+        </div>
+      </div>
+    </main>
+    <!-- Decorative Glow Element -->
+    <div
+      class="fixed -bottom-48 -left-48 w-96 h-96 bg-primary/10 blur-[150px] rounded-full pointer-events-none"
+    ></div>
+    <div
+      class="fixed -top-48 -right-48 w-96 h-96 bg-primary/5 blur-[150px] rounded-full pointer-events-none"
+    ></div>
+  </body>
+</html>

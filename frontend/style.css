@@ -1,0 +1,101 @@
+:root {
+  --primary-neon: #bef264;
+  --primary-glow: rgba(190, 242, 100, 0.3);
+  --bg-dark: #000000;
+  --text-main: #ffffff;
+  --text-muted: #a1a1aa;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+/* Global resets and base styles provided by Tailwind, adding specifics here */
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-neon);
+}
+
+/* Utility Classes */
+.text-neon {
+  color: var(--primary-neon);
+}
+
+.bg-neon {
+  background-color: var(--primary-neon);
+}
+
+.border-neon {
+  border-color: var(--primary-neon);
+}
+
+.shadow-neon {
+  box-shadow: 0 0 20px var(--primary-glow);
+}
+
+/* Hover Effects */
+.hover-scale {
+  transition: transform 0.2s ease-in-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px var(--primary-glow);
+  border-color: var(--primary-neon);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Loader */
+.loader {
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-left-color: var(--primary-neon);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

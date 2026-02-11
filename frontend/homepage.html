@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>GRANITE AI</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#BEF264", // Neon Green
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        color: white;
+        overflow: hidden; /* Prevent scrolling */
+      }
+      #orb-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: auto; /* Essential for interaction */
+      }
+      canvas {
+        display: block; /* Remove inline-block spacing */
+      }
+      .content-overlay {
+        position: relative;
+        z-index: 10;
+        pointer-events: none;
+        height: 100%; /* Use 100% of body */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .pointer-events-auto {
+        pointer-events: auto;
+      }
+      .hero-text-solid {
+        font-size: clamp(4rem, 15vw, 12rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        z-index: 2;
+        text-align: center;
+        line-height: 0.9;
+        pointer-events: none; /* Let clicks pass through text to orb */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 3D Orb Container -->
+    <div id="orb-container"></div>
+
+    <!-- Main Content Overlay -->
+    <div class="content-overlay p-8 md:p-12">
+      <!-- Header -->
+      <header class="flex justify-between items-start pointer-events-auto">
+        <div class="flex items-center gap-1">
+          <a
+            href="homepage.html"
+            class="flex items-center gap-1 hover:opacity-80 transition-opacity"
+          >
+            <span class="text-2xl font-bold tracking-tighter">GRANITE</span>
+            <span
+              class="bg-white/10 text-primary px-1 rounded text-[10px] font-bold self-start mt-1"
+              >AI</span
+            >
+          </a>
+        </div>
+
+        <nav class="flex items-center gap-8 text-sm font-medium text-zinc-400">
+          <a href="process.html" class="hover:text-white transition-colors"
+            >Process</a
+          >
+          <a href="#" class="hover:text-white transition-colors"
+            >Architecture</a
+          >
+          <a href="#" class="hover:text-white transition-colors">Solution</a>
+          <a
+            href="login.html"
+            class="bg-primary text-black px-6 py-2 rounded-full font-bold hover:bg-primary/90 transition-colors"
+            >Login</a
+          >
+        </nav>
+      </header>
+
+      <!-- Center Elements -->
+      <div
+        class="absolute top-1/2 left-0 w-full -translate-y-1/2 pointer-events-none"
+      >
+        <h1 class="hero-text-solid">GRANITE</h1>
+      </div>
+
+      <!-- Left Floating Element -->
+      <div
+        class="absolute top-[40%] left-12 pointer-events-auto hidden md:block"
+      >
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+          <span class="text-[10px] tracking-widest text-zinc-400 uppercase"
+            >Available for Enterprise</span
+          >
+        </div>
+      </div>
+
+      <!-- Footer/Bottom Elements -->
+      <div
+        class="flex justify-between items-end mt-auto pointer-events-auto relative z-20"
+      >
+        <!-- Left Text -->
+        <div class="max-w-md pointer-events-none">
+          <p class="text-xl md:text-2xl font-light leading-tight text-zinc-300">
+            Convert complex <br />
+            documents into
+            <span class="text-primary font-medium">high-fidelity</span> <br />
+            educational cinema
+          </p>
+        </div>
+
+        <!-- Right Button -->
+        <a
+          href="dashboard.html"
+          class="group bg-primary text-black pl-8 pr-6 py-4 rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-4"
+        >
+          START CREATING
+          <span
+            class="material-symbols-outlined text-xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+            >call_made</span
+          >
+        </a>
+      </div>
+    </div>
+
+    <!-- Import Map -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+        }
+      }
+    </script>
+
+    <!-- Orb Script -->
+    <script type="module">
+      import * as THREE from "three";
+
+      // --- Setup ---
+      const container = document.getElementById("orb-container");
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000,
+      );
+      camera.position.z = 8;
+
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(renderer.domElement);
+
+      // --- Configuration ---
+      const particleCount = 9000;
+      const orbRadius = 3.5;
+      const mouseRadius = 2.0;
+      const pushStrength = 1.2;
+      const returnSpeed = 0.05;
+
+      const particlesGeometry = new THREE.BufferGeometry();
+      const posArray = new Float32Array(particleCount * 3);
+      const originalPos = new Float32Array(particleCount * 3);
+      const velocities = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        const phi = Math.acos(-1 + (2 * (i / 3)) / particleCount);
+        const theta = Math.sqrt(particleCount * Math.PI) * phi;
+
+        posArray[i] = orbRadius * Math.cos(theta) * Math.sin(phi);
+        posArray[i + 1] = orbRadius * Math.sin(theta) * Math.sin(phi);
+        posArray[i + 2] = orbRadius * Math.cos(phi);
+
+        originalPos[i] = posArray[i];
+        originalPos[i + 1] = posArray[i + 1];
+        originalPos[i + 2] = posArray[i + 2];
+      }
+
+      particlesGeometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(posArray, 3),
+      );
+
+      const particlesMaterial = new THREE.PointsMaterial({
+        size: 0.018,
+        color: 0xccffcc, // Light green
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending,
+      });
+
+      const particlesMesh = new THREE.Points(
+        particlesGeometry,
+        particlesMaterial,
+      );
+      scene.add(particlesMesh);
+
+      // --- Mouse Interaction ---
+      const mouse = new THREE.Vector3(0, 0, 0);
+      const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+      const raycaster = new THREE.Raycaster();
+
+      window.addEventListener("mousemove", (event) => {
+        const pointer = new THREE.Vector2();
+        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(pointer, camera);
+        raycaster.ray.intersectPlane(plane, mouse);
+      });
+
+      // --- Animation ---
+      function animate() {
+        const positions = particlesGeometry.attributes.position.array;
+        particlesMesh.rotation.y += 0.002; // Constant rotation
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+          const ox = originalPos[i];
+          const oy = originalPos[i + 1];
+          const oz = originalPos[i + 2];
+
+          // Rotate original position to match mesh rotation for proper home target
+          const cos = Math.cos(particlesMesh.rotation.y);
+          const sin = Math.sin(particlesMesh.rotation.y);
+          const rotatedX = ox * cos - oz * sin;
+          const rotatedZ = ox * sin + oz * cos;
+
+          // Interaction Force
+          const dx = positions[i] - mouse.x;
+          const dy = positions[i + 1] - mouse.y;
+          const dz = positions[i + 2] - 0;
+
+          const distSq = dx * dx + dy * dy;
+          const dist = Math.sqrt(distSq);
+
+          if (dist < mouseRadius) {
+            const force = (mouseRadius - dist) / mouseRadius;
+            velocities[i] += (dx / dist) * force * pushStrength;
+            velocities[i + 1] += (dy / dist) * force * pushStrength;
+            velocities[i + 2] +=
+              (positions[i + 2] > 0 ? 1 : -1) * force * pushStrength * 0.5;
+          }
+
+          // Return to home
+          velocities[i] += (rotatedX - positions[i]) * returnSpeed;
+          velocities[i + 1] += (oy - positions[i + 1]) * returnSpeed;
+          velocities[i + 2] += (rotatedZ - positions[i + 2]) * returnSpeed;
+
+          // Damping
+          velocities[i] *= 0.88;
+          velocities[i + 1] *= 0.88;
+          velocities[i + 2] *= 0.88;
+
+          // Update position
+          positions[i] += velocities[i];
+          positions[i + 1] += velocities[i + 1];
+          positions[i + 2] += velocities[i + 2];
+        }
+
+        particlesGeometry.attributes.position.needsUpdate = true;
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+
+      // --- Resize ---
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+
+    <!-- Login Persistence Check -->
+    <script>
+      const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+    </script>
+  </body>
+</html>

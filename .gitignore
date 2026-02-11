@@ -31,3 +31,7 @@ uploads/
 granite_scene.py
 
 crewai.txt
+# FFmpeg binary download
+backend/ffmpeg_bin/
+temp_ffmpeg/
+backend/output_videos/

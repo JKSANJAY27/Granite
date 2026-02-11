@@ -15,8 +15,14 @@ from typing import Dict, List, Any
 
 from crewai import Agent
 
+# ── Ensure local FFmpeg is on PATH ───────────────────────────────────
+_ffmpeg_bin = Path(__file__).parent / "ffmpeg_bin" / "bin"
+if _ffmpeg_bin.exists():
+    os.environ["PATH"] = str(_ffmpeg_bin) + os.pathsep + os.environ.get("PATH", "")
+
+# ── moviepy v1/v2 compatibility ──────────────────────────────────────
 try:
-    from moviepy.editor import (
+    from moviepy import (
         VideoFileClip,
         AudioFileClip,
         CompositeVideoClip,
@@ -25,8 +31,18 @@ try:
     )
     HAS_MOVIEPY = True
 except ImportError:
-    HAS_MOVIEPY = False
-    print("⚠️  moviepy not installed — video composition will use fallback")
+    try:
+        from moviepy.editor import (
+            VideoFileClip,
+            AudioFileClip,
+            CompositeVideoClip,
+            concatenate_videoclips,
+            ColorClip,
+        )
+        HAS_MOVIEPY = True
+    except ImportError:
+        HAS_MOVIEPY = False
+        print("⚠️  moviepy not installed — video composition will use fallback")
 
 
 class VideoComposerAgent(Agent):

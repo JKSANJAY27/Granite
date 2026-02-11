@@ -14,9 +14,15 @@ import re
 import subprocess
 import asyncio
 from typing import Type
+from pathlib import Path
 
 from crewai.tools import BaseTool
 from pydantic import BaseModel, Field
+
+# ── Ensure local FFmpeg is on PATH ───────────────────────────────────
+_ffmpeg_bin = Path(__file__).parent / "ffmpeg_bin" / "bin"
+if _ffmpeg_bin.exists():
+    os.environ["PATH"] = str(_ffmpeg_bin) + os.pathsep + os.environ.get("PATH", "")
 
 
 # ─────────────────────────────────────────────────────────
@@ -621,7 +627,11 @@ class VideoComposerTool(BaseTool):
     def _try_moviepy(self, video_path: str, audio_path: str, output_path: str) -> str:
         """Fallback to moviepy for composition."""
         try:
-            from moviepy.editor import VideoFileClip, AudioFileClip
+            # Support both moviepy v1 (moviepy.editor) and v2 (moviepy)
+            try:
+                from moviepy import VideoFileClip, AudioFileClip
+            except ImportError:
+                from moviepy.editor import VideoFileClip, AudioFileClip
 
             if not os.path.exists(video_path):
                 return f"Error: Video file not found at '{video_path}'."
@@ -691,7 +701,11 @@ class QualityCheckerTool(BaseTool):
 
             # Fallback to moviepy
             try:
-                from moviepy.editor import VideoFileClip
+                # Support both moviepy v1 and v2
+                try:
+                    from moviepy import VideoFileClip
+                except ImportError:
+                    from moviepy.editor import VideoFileClip
                 clip = VideoFileClip(video_path)
                 duration = clip.duration
                 w, h = clip.size

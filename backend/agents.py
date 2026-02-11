@@ -1,7 +1,7 @@
 """
 Granite - Agent Definitions
 
-Uses CrewAI's native LLM class with Gemini provider (FREE).
+Uses CrewAI's native LLM class with Gemini provider (PAID).
 All Anthropic/Claude dependencies removed — Gemini handles everything.
 
 Docs: https://docs.crewai.com/concepts/agents
@@ -34,26 +34,28 @@ else:
     print("[Granite] WARNING: No GEMINI_API_KEY found!")
 
 # ─── LLM CONFIGURATION ───────────────────────────────────────────────
-# GEMINI_API_KEY_2 → Paid Pro subscription (used for ALL agents)
+# Uses PAID Gemini models — ensure GEMINI_API_KEY has billing enabled
 #
-# Model                 Best For
-# gemini-2.0-flash      General tasks (planning, narration, QA) — fast
-# gemini-2.5-pro        Complex coding & reasoning (Manim) — best quality
+# Model                          Best For
+# gemini-2.0-flash               General tasks (planning, narration, QA) — fast
+# gemini-2.5-pro                  Complex coding & reasoning (Manim) — best quality
+
+_api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY_2")
 
 # ─── Standard LLM (planning, narration, composition, QA) ──
 gemini_llm = LLM(
     model="gemini/gemini-2.0-flash",
     temperature=0.5,
     max_tokens=4096,
-    api_key=os.getenv("GEMINI_API_KEY_2"),
+    api_key=_api_key,
 )
 
 # ─── Manim LLM (code generation — best model for accuracy) ──
 manim_llm = LLM(
     model="gemini/gemini-2.5-pro",
-    temperature=0.3,
+    temperature=0.2,
     max_tokens=8192,
-    api_key=os.getenv("GEMINI_API_KEY_2"),
+    api_key=_api_key,
 )
 
 

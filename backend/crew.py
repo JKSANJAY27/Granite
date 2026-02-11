@@ -9,6 +9,15 @@ Docs: https://docs.crewai.com/concepts/crews
 
 import time
 import sys
+import os
+from pathlib import Path
+
+# ── Add local FFmpeg to PATH if present ──────────────────────────────
+ffmpeg_bin = Path(__file__).parent / "ffmpeg_bin" / "bin"
+if ffmpeg_bin.exists():
+    os.environ["PATH"] = str(ffmpeg_bin) + os.pathsep + os.environ["PATH"]
+    print(f"[Granite] Added local FFmpeg to PATH: {ffmpeg_bin}")
+
 from crewai import Crew, Process
 from agents import GraniteAgents
 from tasks import GraniteTasks
@@ -30,6 +39,16 @@ TRANSIENT_ERROR_KEYWORDS = [
     "RemoteDisconnected",
     "EOFError",
     "BrokenPipeError",
+    # ── Added: catch Gemini 503 / UNAVAILABLE and empty LLM responses ──
+    "503",
+    "UNAVAILABLE",
+    "ServerError",
+    "high demand",
+    "None or empty",
+    "overloaded",
+    "capacity",
+    "rate limit",
+    "quota",
 ]
 
 
@@ -67,7 +86,7 @@ class GraniteCrew:
     """
 
     MAX_RETRIES = 5
-    BASE_WAIT_SECONDS = 10  # doubles each retry: 10, 20, 40, 80, 160
+    BASE_WAIT_SECONDS = 30  # doubles each retry: 30, 60, 120, 240...
 
     def __init__(self, topic: str):
         self.topic = topic

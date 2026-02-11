@@ -1,5 +1,6 @@
 """
 Quick test: Run the Granite pipeline with the sample_calculus.pdf
+All paid APIs replaced — uses only Gemini (free) + edge-tts/gTTS (free)
 """
 import os
 import sys
@@ -9,16 +10,23 @@ load_dotenv(override=True)
 
 # Verify API keys are set
 gemini_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-lmnt_key = os.getenv("LMNT_API_KEY")
 
 if not gemini_key:
     print("ERROR: No GEMINI_API_KEY or GOOGLE_API_KEY found in .env")
     sys.exit(1)
-if not lmnt_key:
-    print("WARNING: No LMNT_API_KEY found in .env — narration will fail")
 
 print(f"GEMINI key: ...{gemini_key[-6:]}")
-print(f"LMNT key:   ...{lmnt_key[-6:] if lmnt_key else 'MISSING'}")
+
+# Check TTS availability
+try:
+    import edge_tts
+    print("TTS engine: edge-tts (high-quality neural voices ✅)")
+except ImportError:
+    try:
+        from gtts import gTTS
+        print("TTS engine: gTTS (standard quality ✅)")
+    except ImportError:
+        print("WARNING: No TTS engine found — install edge-tts or gTTS")
 
 # Run the pipeline
 from crew import GraniteCrew

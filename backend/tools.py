@@ -3,6 +3,10 @@ Granite - Custom Tools for the CrewAI Pipeline
 
 Each tool follows CrewAI's BaseTool pattern with a proper Pydantic args_schema.
 Docs: https://docs.crewai.com/concepts/tools#subclassing-basetool
+
+ALL paid API dependencies removed:
+  - LMNT TTS → edge-tts / gTTS (FREE)
+  - Anthropic → Gemini (configured in agents.py)
 """
 
 import os
@@ -105,6 +109,51 @@ class ImageContentExtractor(BaseTool):
     args_schema: Type[BaseModel] = ImageExtractorInput
 
     def _run(self, file_path: str) -> str:
+        # Try Gemini Vision first (free, best quality)
+        text = self._try_gemini_vision(file_path)
+        if text:
+            return text
+
+        # Fallback to pytesseract (free, offline)
+        text = self._try_pytesseract(file_path)
+        if text:
+            return text
+
+        return f"Error: Could not extract text from '{file_path}'. Install pytesseract or google-generativeai."
+
+    def _try_gemini_vision(self, file_path: str) -> str:
+        """Use Gemini Vision (free) for high-quality OCR."""
+        try:
+            import google.generativeai as genai
+            from PIL import Image
+
+            api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY_2")
+            if not api_key:
+                return ""
+
+            if not os.path.exists(file_path):
+                return ""
+
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel("gemini-2.0-flash")
+            img = Image.open(file_path)
+
+            prompt = (
+                "Extract all text content from this image. Include any "
+                "mathematical formulas, diagram descriptions, and educational "
+                "content. Format clearly and preserve structure."
+            )
+            response = model.generate_content([prompt, img])
+            return response.text.strip() if response.text else ""
+
+        except ImportError:
+            return ""
+        except Exception as e:
+            print(f"Gemini Vision OCR failed: {e}")
+            return ""
+
+    def _try_pytesseract(self, file_path: str) -> str:
+        """Fallback to pytesseract (free, offline)."""
         try:
             from PIL import Image
             import pytesseract
@@ -116,10 +165,7 @@ class ImageContentExtractor(BaseTool):
             text = pytesseract.image_to_string(image)
             return text.strip() if text.strip() else "No text could be extracted from the image."
         except ImportError:
-            return (
-                "Error: pytesseract or Pillow not installed. "
-                "Install with: pip install pytesseract Pillow"
-            )
+            return ""
         except Exception as e:
             return f"Error extracting text from image: {e}"
 
@@ -148,7 +194,7 @@ DEPRECATED_API_FIXES = {
     "get_graph": "plot",
     "get_graph_label": "get_x_axis_label",
     "play_sound": "# play_sound removed",
-    "ShowPassingFlash": "ShowPassingFlash",  # still valid but often misused
+    "ShowPassingFlash": "ShowPassingFlash",
 }
 
 
@@ -229,7 +275,6 @@ class ManimCodeExecutor(BaseTool):
 
     def _preprocess_code(self, code: str) -> str:
         """Clean up code: remove markdown fences, ensure imports."""
-        # Remove markdown code fences if the LLM wrapped the code
         if "```python" in code:
             code = code.split("```python", 1)[1]
             if "```" in code:
@@ -243,7 +288,6 @@ class ManimCodeExecutor(BaseTool):
 
         code = code.strip()
 
-        # Ensure the Manim import is present
         if "from manim import" not in code:
             code = "from manim import *\n\n" + code
 
@@ -289,13 +333,10 @@ class ManimCodeExecutor(BaseTool):
 
     def _format_error(self, stderr: str, code: str) -> str:
         """Format Manim errors with actionable fix suggestions."""
-        # Truncate very long errors
         if len(stderr) > 3000:
             stderr = stderr[-3000:]
 
         error_msg = f"Manim execution failed.\n\nERROR OUTPUT:\n{stderr}\n\n"
-
-        # Detect common error patterns and suggest fixes
         suggestions = []
 
         if "ModuleNotFoundError" in stderr:
@@ -367,7 +408,7 @@ class ManimCodeExecutor(BaseTool):
 
 
 # ─────────────────────────────────────────────────────────
-# 4. LMNT Text-to-Speech
+# 4. Text-to-Speech (LMNT primary, edge-tts / gTTS fallback)
 # ─────────────────────────────────────────────────────────
 class LMNTInput(BaseModel):
     """Input schema for LMNTTextToSpeech."""
@@ -382,17 +423,42 @@ class LMNTTextToSpeech(BaseTool):
     name: str = "lmnt_text_to_speech"
     description: str = (
         "Converts text into natural-sounding speech audio using the LMNT API. "
+        "Falls back to edge-tts or gTTS if LMNT is unavailable. "
         "Returns the file path of the generated MP3 audio file."
     )
     args_schema: Type[BaseModel] = LMNTInput
 
     def _run(self, text: str, output_file: str = "narration.mp3") -> str:
+        # Method 1: LMNT (primary — high quality)
+        result = self._try_lmnt(text, output_file)
+        if result:
+            return result
+
+        # Method 2: edge-tts (fallback — free, high quality)
+        result = self._try_edge_tts(text, output_file)
+        if result:
+            return result
+
+        # Method 3: gTTS (fallback — free, standard quality)
+        result = self._try_gtts(text, output_file)
+        if result:
+            return result
+
+        return (
+            "Error: No TTS engine available. Set LMNT_API_KEY or install:\n"
+            "  pip install edge-tts    (free fallback — high quality neural voices)\n"
+            "  pip install gTTS        (free fallback — Google Translate TTS)"
+        )
+
+    def _try_lmnt(self, text: str, output_file: str) -> str:
+        """Try LMNT API (primary, best quality)."""
         try:
             from lmnt.api import Speech
 
             api_key = os.getenv("LMNT_API_KEY")
             if not api_key:
-                return "Error: LMNT_API_KEY environment variable is not set."
+                print("⚠️  LMNT_API_KEY not set — falling back to free TTS")
+                return ""
 
             async def _synthesize():
                 async with Speech(api_key) as speech:
@@ -407,24 +473,78 @@ class LMNTTextToSpeech(BaseTool):
             # Run the async function — handle case where event loop is already running
             try:
                 loop = asyncio.get_running_loop()
-                # If we're in an async context, create a new thread
                 import concurrent.futures
                 with concurrent.futures.ThreadPoolExecutor() as pool:
                     pool.submit(asyncio.run, _synthesize()).result()
             except RuntimeError:
-                # No event loop running — safe to use asyncio.run
                 asyncio.run(_synthesize())
 
-            if os.path.exists(output_file):
+            if os.path.exists(output_file) and os.path.getsize(output_file) > 100:
+                print(f"✅ Audio generated with LMNT: {output_file}")
                 return output_file
-            else:
-                return "Error: Audio file was not created."
+            return ""
+
+        except ImportError:
+            print("⚠️  lmnt package not installed — falling back to free TTS")
+            return ""
         except Exception as e:
-            return f"Error generating speech with LMNT: {e}"
+            print(f"⚠️  LMNT failed: {e} — falling back to free TTS")
+            return ""
+
+    def _try_edge_tts(self, text: str, output_file: str) -> str:
+        """Fallback: edge-tts (free Microsoft Edge neural voices)."""
+        try:
+            import edge_tts
+
+            async def _synthesize():
+                communicate = edge_tts.Communicate(
+                    text=text,
+                    voice="en-US-AriaNeural",
+                    rate="-5%",
+                )
+                await communicate.save(output_file)
+
+            try:
+                loop = asyncio.get_running_loop()
+                import concurrent.futures
+                with concurrent.futures.ThreadPoolExecutor() as pool:
+                    pool.submit(asyncio.run, _synthesize()).result()
+            except RuntimeError:
+                asyncio.run(_synthesize())
+
+            if os.path.exists(output_file) and os.path.getsize(output_file) > 100:
+                print(f"✅ Audio generated with edge-tts: {output_file}")
+                return output_file
+            return ""
+
+        except ImportError:
+            return ""
+        except Exception as e:
+            print(f"edge-tts failed: {e}")
+            return ""
+
+    def _try_gtts(self, text: str, output_file: str) -> str:
+        """Fallback: gTTS (free Google Translate TTS)."""
+        try:
+            from gtts import gTTS
+
+            tts = gTTS(text=text, lang="en", slow=False)
+            tts.save(output_file)
+
+            if os.path.exists(output_file):
+                print(f"✅ Audio generated with gTTS: {output_file}")
+                return output_file
+            return ""
+
+        except ImportError:
+            return ""
+        except Exception as e:
+            print(f"gTTS failed: {e}")
+            return ""
 
 
 # ─────────────────────────────────────────────────────────
-# 5. Video Composer (merge video + audio)
+# 5. Video Composer (merge video + audio) — NO PAID DEPS
 # ─────────────────────────────────────────────────────────
 class VideoComposerInput(BaseModel):
     """Input schema for VideoComposerTool."""
@@ -506,7 +626,7 @@ class VideoComposerTool(BaseTool):
                 output_path,
                 codec="libx264",
                 audio_codec="aac",
-                logger=None,  # suppress moviepy's verbose output
+                logger=None,
             )
 
             video.close()
@@ -526,7 +646,7 @@ class VideoComposerTool(BaseTool):
 
 
 # ─────────────────────────────────────────────────────────
-# 6. Quality Checker
+# 6. Quality Checker — NO PAID DEPS
 # ─────────────────────────────────────────────────────────
 class QualityCheckerInput(BaseModel):
     """Input schema for QualityCheckerTool."""
@@ -547,7 +667,7 @@ class QualityCheckerTool(BaseTool):
                 return f"FAIL: Video file does not exist at '{video_path}'."
 
             file_size = os.path.getsize(video_path)
-            if file_size < 1000:  # less than 1 KB is suspicious
+            if file_size < 1000:
                 return f"FAIL: Video file is too small ({file_size} bytes). Likely corrupt."
 
             # Try ffprobe first (faster, more reliable)

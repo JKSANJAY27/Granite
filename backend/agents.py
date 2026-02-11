@@ -1,7 +1,9 @@
 """
 Granite - Agent Definitions
 
-Uses CrewAI's native LLM class with Gemini provider.
+Uses CrewAI's native LLM class with Gemini provider (FREE).
+All Anthropic/Claude dependencies removed — Gemini handles everything.
+
 Docs: https://docs.crewai.com/concepts/agents
       https://docs.crewai.com/concepts/llms
 """
@@ -23,63 +25,34 @@ load_dotenv(override=True)
 
 # Debug: Print which key is being used
 _key = os.getenv("GEMINI_API_KEY")
+_key2 = os.getenv("GEMINI_API_KEY_2")
 if _key:
     print(f"[Granite] Using Gemini API key ending in: ...{_key[-8:]}")
+elif _key2:
+    print(f"[Granite] Using Gemini API key 2 ending in: ...{_key2[-8:]}")
 else:
     print("[Granite] WARNING: No GEMINI_API_KEY found!")
 
-# ─── Configure Standard LLM (Gemini 2.0 Flash) ─────────────────────────
-# Using GEMINI_API_KEY_2 because first key's project quota is exhausted
+# ─── Configure Standard LLM (Gemini 2.0 Flash - FREE) ───────────────
 gemini_llm = LLM(
-    model="gemini/gemini-2.0-flash",
+    model="gemini/gemini-flash-latest",
     temperature=0.5,
     max_tokens=4096,
-    api_key=os.getenv("GEMINI_API_KEY_2"),
+    api_key=os.getenv("GEMINI_API_KEY_2") or os.getenv("GEMINI_API_KEY"),
 )
 
-# ─── Configure Manim LLM (Anthropic -> Gemini Fallback) ────────────────
-# Strategy: Try Anthropic 3.5 Sonnet (best for code).
-# If it fails (key issues, quota), fall back to Gemini 2.5 Pro.
-
-anthropic_key = os.getenv("ANTHROPIC_API_KEY")
-gemini_pro_key = os.getenv("GEMINI_API_KEY_2")
-
-manim_llm = None
-
-if anthropic_key:
-    # Attempt to validate Anthropic key with a minimal call
-    try:
-        print("[Granite] Checking Anthropic API key...")
-        from anthropic import Anthropic
-        client = Anthropic(api_key=anthropic_key)
-        # Minimal ping
-        client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=10,
-            messages=[{"role": "user", "content": "Hi"}]
-        )
-        print("[Granite] Anthropic API key is VALID. Using Claude 3.5 Sonnet for Manim.")
-        manim_llm = LLM(
-            model="anthropic/claude-3-5-sonnet-20241022",
-            temperature=0.2,
-            max_tokens=8192,
-            api_key=anthropic_key,
-        )
-    except Exception as e:
-        print(f"[Granite] Anthropic check failed: {e}")
-        print("[Granite] Falling back to Gemini 2.5 Pro.")
-
-# Fallback if Anthropic failed or no key provided
-if manim_llm is None:
-    manim_llm = LLM(
-        model="gemini/gemini-2.0-flash",
-        temperature=0.3,
-        max_tokens=8192,
-        api_key=gemini_pro_key,
-    )
+# ─── Configure Manim LLM (Gemini 2.5 Pro - FREE) ─────────────────
+# previously used gemini-2.0-flash which had SSL errors.
+# Now using Gemini 2.5 Pro which is robust for coding.
+manim_llm = LLM(
+    model="gemini/gemini-2.5-pro",
+    temperature=0.3,
+    max_tokens=8192,
+    api_key=os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY_2"),
+)
 
 
-# ─── Agent Factory ─────────────────────────────────────────────────────
+# ─── Agent Factory ─────────────────────────────────────────────────
 class GraniteAgents:
     """Creates and returns all agents used in the Granite pipeline."""
 
@@ -186,7 +159,7 @@ class GraniteAgents:
                 "- Always use 'from manim import *' at the top\n"
                 "- Always name the class 'GraniteScene(Scene)'\n"
                 "- Always include 'def construct(self):'\n"
-                "- For LaTeX: use MathTex(r'\\frac{a}{b}') with raw strings and double backslashes\n"
+                "- For LaTeX: use MathTex(r'\\\\frac{a}{b}') with raw strings and double backslashes\n"
                 "- For axes labels: use ax.get_x_axis_label() and ax.get_y_axis_label()\n"
                 "- For function plots: use ax.plot(lambda x: ...) NOT ax.get_graph()\n"
                 "- Make sure all variables are defined before use\n"
@@ -202,10 +175,10 @@ class GraniteAgents:
                 "```"
             ),
             tools=[ManimCodeExecutor()],
-            llm=manim_llm,  # Uses Claude (preferred) or Gemini Pro (fallback)
+            llm=manim_llm,
             verbose=True,
             allow_delegation=False,
-            max_iter=5,  # allow retries if code fails
+            max_iter=5,
         )
 
     def narrator(self) -> Agent:
@@ -213,7 +186,7 @@ class GraniteAgents:
             role="Voiceover Narrator",
             goal=(
                 "Generate a high-quality voiceover audio file from the "
-                "narration script using the LMNT text-to-speech tool."
+                "narration script using the text-to-speech tool."
             ),
             backstory=(
                 "You are an AI voice artist who delivers clear, engaging, "

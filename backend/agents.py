@@ -22,20 +22,61 @@ from tools import (
 load_dotenv(override=True)
 
 # Debug: Print which key is being used
-_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+_key = os.getenv("GEMINI_API_KEY")
 if _key:
-    print(f"[Granite] Using API key ending in: ...{_key[-8:]}")
+    print(f"[Granite] Using Gemini API key ending in: ...{_key[-8:]}")
 else:
-    print("[Granite] WARNING: No GEMINI_API_KEY or GOOGLE_API_KEY found!")
+    print("[Granite] WARNING: No GEMINI_API_KEY found!")
 
-# ─── Configure Gemini LLM via CrewAI's native LLM class ───────────────
-# CrewAI uses the google-genai SDK under the hood for "gemini/" models.
-# Requires GEMINI_API_KEY or GOOGLE_API_KEY in .env
+# ─── Configure Standard LLM (Gemini 2.0 Flash) ─────────────────────────
+# Using GEMINI_API_KEY_2 because first key's project quota is exhausted
 gemini_llm = LLM(
-    model="gemini/gemini-2.5-flash",
+    model="gemini/gemini-2.0-flash",
     temperature=0.5,
     max_tokens=4096,
+    api_key=os.getenv("GEMINI_API_KEY_2"),
 )
+
+# ─── Configure Manim LLM (Anthropic -> Gemini Fallback) ────────────────
+# Strategy: Try Anthropic 3.5 Sonnet (best for code).
+# If it fails (key issues, quota), fall back to Gemini 2.5 Pro.
+
+anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+gemini_pro_key = os.getenv("GEMINI_API_KEY_2")
+
+manim_llm = None
+
+if anthropic_key:
+    # Attempt to validate Anthropic key with a minimal call
+    try:
+        print("[Granite] Checking Anthropic API key...")
+        from anthropic import Anthropic
+        client = Anthropic(api_key=anthropic_key)
+        # Minimal ping
+        client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=10,
+            messages=[{"role": "user", "content": "Hi"}]
+        )
+        print("[Granite] Anthropic API key is VALID. Using Claude 3.5 Sonnet for Manim.")
+        manim_llm = LLM(
+            model="anthropic/claude-3-5-sonnet-20241022",
+            temperature=0.2,
+            max_tokens=8192,
+            api_key=anthropic_key,
+        )
+    except Exception as e:
+        print(f"[Granite] Anthropic check failed: {e}")
+        print("[Granite] Falling back to Gemini 2.5 Pro.")
+
+# Fallback if Anthropic failed or no key provided
+if manim_llm is None:
+    manim_llm = LLM(
+        model="gemini/gemini-2.0-flash",
+        temperature=0.3,
+        max_tokens=8192,
+        api_key=gemini_pro_key,
+    )
 
 
 # ─── Agent Factory ─────────────────────────────────────────────────────
@@ -74,7 +115,18 @@ class GraniteAgents:
                 "You are a seasoned educator who excels at breaking complex "
                 "topics into simple, intuitive explanations.  You know how "
                 "to order concepts so each builds on the last, and you "
-                "always suggest clear, minimalistic animations."
+                "always suggest clear, minimalistic animations.\n\n"
+                "LESSON PLANNING GUIDELINES:\n"
+                "- Create engaging, structured lessons that build concepts progressively\n"
+                "- Identify natural visualization opportunities for mathematical concepts\n"
+                "- Use clear, accessible language appropriate for the target audience\n"
+                "- Structure content to flow logically from simple to complex\n"
+                "- Estimate realistic time allocations for each scene\n\n"
+                "VISUALIZATION INTEGRATION:\n"
+                "- Identify key mathematical concepts that benefit from visual explanation\n"
+                "- Provide specific concepts for the Manim animator to visualize\n"
+                "- Ensure visualizations support and enhance the educational narrative\n"
+                "- Consider timing and pacing for visual elements"
             ),
             tools=[],  # pure reasoning agent
             llm=gemini_llm,
@@ -89,15 +141,68 @@ class GraniteAgents:
                 "Write complete, runnable Python code using the Manim "
                 "Community library that visualises the lesson plan.  "
                 "The code MUST define a class called 'GraniteScene' "
-                "inheriting from Scene."
+                "inheriting from Scene. After writing the code, use the "
+                "manim_code_executor tool to render it. If it fails, "
+                "read the error carefully, fix the code, and retry."
             ),
             backstory=(
-                "You are a Python expert with deep knowledge of the Manim "
-                "library.  You write clean, error-free Manim code that "
-                "produces beautiful, 3Blue1Brown-style animations."
+                "You are an expert Manim developer creating educational animations.\n\n"
+
+                "MANIM QUICK REFERENCE:\n"
+                "- Scene class: All animations inherit from Scene\n"
+                "- self.play(): Main animation method\n"
+                "- Create, Write, FadeIn, FadeOut: Basic animations\n"
+                "- Transform, ReplacementTransform: Morphing animations\n"
+                "- MathTex, Tex: LaTeX rendering (use raw strings r'...')\n"
+                "- NumberPlane, Axes: Coordinate systems\n"
+                "- Circle, Square, Rectangle, Line, Arrow, Dot: Basic shapes\n"
+                "- VGroup: Group objects together\n"
+                "- self.wait(): Pause between animations\n"
+                "- Text(): For regular text (NOT LaTeX)\n"
+                "- FunctionGraph, ParametricFunction: For plotting functions\n\n"
+
+                "STYLE GUIDELINES:\n"
+                "- Use smooth transitions (run_time=1-2 seconds typically)\n"
+                "- Layer complexity gradually\n"
+                "- Use color to highlight important concepts (BLUE, YELLOW, GREEN, RED)\n"
+                "- Include helpful annotations and labels\n"
+                "- Follow 3Blue1Brown aesthetic principles\n"
+                "- Use dark background (default) with bright, contrasting elements\n\n"
+
+                "VISUAL QUALITY REQUIREMENTS:\n"
+                "- NEVER overlap text with axes, gridlines, or other objects\n"
+                "- Use .shift() and .move_to() to position elements with adequate spacing\n"
+                "- Place labels OUTSIDE the main visual area or in clear empty spaces\n"
+                "- Keep axes numbers/labels separated from mathematical objects\n"
+                "- Use VGroup to manage spacing between related elements\n"
+                "- Default spacing: at least 0.5 units between text and other objects\n"
+                "- Always use self.play() for animations, never just add objects directly\n\n"
+
+                "COMMON PITFALLS TO AVOID:\n"
+                "- Do NOT use 'ShowCreation' — use 'Create' instead\n"
+                "- Do NOT use 'TextMobject' — use 'Text' instead\n"
+                "- Do NOT use 'TexMobject' — use 'Tex' or 'MathTex' instead\n"
+                "- Do NOT use deprecated methods like get_graph_label — use Tex with positioning\n"
+                "- Always use 'from manim import *' at the top\n"
+                "- Always name the class 'GraniteScene(Scene)'\n"
+                "- Always include 'def construct(self):'\n"
+                "- For LaTeX: use MathTex(r'\\frac{a}{b}') with raw strings and double backslashes\n"
+                "- For axes labels: use ax.get_x_axis_label() and ax.get_y_axis_label()\n"
+                "- For function plots: use ax.plot(lambda x: ...) NOT ax.get_graph()\n"
+                "- Make sure all variables are defined before use\n"
+                "- CleanupType errors: use FadeOut(*mobjects) to clear the scene\n\n"
+
+                "CODE STRUCTURE:\n"
+                "```\n"
+                "from manim import *\n\n"
+                "class GraniteScene(Scene):\n"
+                "    def construct(self):\n"
+                "        # Your animation code here\n"
+                "        ...\n"
+                "```"
             ),
             tools=[ManimCodeExecutor()],
-            llm=gemini_llm,
+            llm=manim_llm,  # Uses Claude (preferred) or Gemini Pro (fallback)
             verbose=True,
             allow_delegation=False,
             max_iter=5,  # allow retries if code fails

@@ -4,6 +4,7 @@ fastapi
 uvicorn[standard]
 python-multipart
 python-dotenv
+anthropic  # For Claude
 
 # ─── Animation & Video ───────────────────────────
 manim
@@ -12,6 +13,7 @@ ffmpeg-python
 
 # ─── Content Extraction ──────────────────────────
 pymupdf
+PyPDF2
 pytesseract
 Pillow
 

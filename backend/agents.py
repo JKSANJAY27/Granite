@@ -33,22 +33,27 @@ elif _key2:
 else:
     print("[Granite] WARNING: No GEMINI_API_KEY found!")
 
-# ─── Configure Standard LLM (Gemini 2.0 Flash - FREE) ───────────────
+# ─── LLM CONFIGURATION ───────────────────────────────────────────────
+# GEMINI_API_KEY_2 → Paid Pro subscription (used for ALL agents)
+#
+# Model                 Best For
+# gemini-2.0-flash      General tasks (planning, narration, QA) — fast
+# gemini-2.5-pro        Complex coding & reasoning (Manim) — best quality
+
+# ─── Standard LLM (planning, narration, composition, QA) ──
 gemini_llm = LLM(
-    model="gemini/gemini-flash-latest",
+    model="gemini/gemini-2.0-flash",
     temperature=0.5,
     max_tokens=4096,
-    api_key=os.getenv("GEMINI_API_KEY_2") or os.getenv("GEMINI_API_KEY"),
+    api_key=os.getenv("GEMINI_API_KEY_2"),
 )
 
-# ─── Configure Manim LLM (Gemini 2.5 Pro - FREE) ─────────────────
-# previously used gemini-2.0-flash which had SSL errors.
-# Now using Gemini 2.5 Pro which is robust for coding.
+# ─── Manim LLM (code generation — best model for accuracy) ──
 manim_llm = LLM(
     model="gemini/gemini-2.5-pro",
     temperature=0.3,
     max_tokens=8192,
-    api_key=os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY_2"),
+    api_key=os.getenv("GEMINI_API_KEY_2"),
 )
 
 

@@ -362,12 +362,26 @@ class ManimCodeExecutor(BaseTool):
                         f"TexMobject→MathTex, get_graph→plot."
                     )
 
+        if "FileNotFoundError" in stderr or "WinError 2" in stderr:
+            suggestions.append(
+                "CRITICAL: LaTeX compiler (pdflatex) is NOT INSTALLED on this system.\n"
+                "  You MUST NOT use MathTex() or Tex() — they require LaTeX!\n"
+                "  SOLUTION: Replace ALL MathTex(...) and Tex(...) calls with Text(...).\n"
+                "  For math expressions, write them in plain text. Examples:\n"
+                "    WRONG:  MathTex(r'\\\\frac{dy}{dx}')\n"
+                "    RIGHT:  Text('dy/dx', font_size=36)\n"
+                "    WRONG:  MathTex(r'x^2 + y^2 = r^2')\n"
+                "    RIGHT:  Text('x² + y² = r²', font_size=36)\n"
+                "  Use Unicode superscripts/subscripts: ² ³ ⁴ ₁ ₂ ₃"
+            )
+
         if "LaTeX" in stderr or "latex" in stderr.lower():
             suggestions.append(
-                "LaTeX compilation error. Common fixes:\n"
-                "  - Use MathTex(r'\\\\frac{{a}}{{b}}') with raw strings and double backslashes\n"
-                "  - Make sure LaTeX is installed (MiKTeX or TeX Live)\n"
-                "  - For simple text, use Text() instead of MathTex()"
+                "LaTeX compilation error. LaTeX may not be installed.\n"
+                "  SOLUTION: Replace ALL MathTex() and Tex() with Text().\n"
+                "  - Use Text('x² + y² = z²') instead of MathTex(r'x^2 + y^2 = z^2')\n"
+                "  - Use Text() for ALL text rendering\n"
+                "  - Do NOT use MathTex() or Tex() at all"
             )
 
         if "TypeError" in stderr:

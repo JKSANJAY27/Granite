@@ -83,6 +83,28 @@ class GraniteTasks:
                 "4. Use ONLY Manim Community Edition API (not manimgl or old ManimCairo).\n\n"
 
                 "===================================================\n"
+                "  ⚠️  CRITICAL: NO LATEX AVAILABLE\n"
+                "===================================================\n\n"
+
+                "LaTeX is NOT installed on this system!\n"
+                "You MUST NOT use MathTex() or Tex() — they WILL crash!\n\n"
+
+                "Use ONLY Text() for ALL text and math rendering.\n"
+                "For mathematical expressions, use Unicode symbols:\n"
+                "  - Superscripts: x² y³ n⁴ (use ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ⁰ ⁿ)\n"
+                "  - Subscripts:   x₁ y₂ n₃ (use ₀ ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉)\n"
+                "  - Fractions:    write as 'a/b' or 'dy/dx'\n"
+                "  - Symbols:      → ≥ ≤ ≠ ≈ ∞ Δ Σ π θ α β γ ∫ √ ±\n\n"
+
+                "Examples:\n"
+                "  WRONG: MathTex(r'\\\\frac{dy}{dx}')  ← WILL CRASH\n"
+                "  RIGHT: Text('dy/dx', font_size=36)\n\n"
+                "  WRONG: MathTex(r'x^2 + y^2 = r^2') ← WILL CRASH\n"
+                "  RIGHT: Text('x² + y² = r²', font_size=36)\n\n"
+                "  WRONG: Tex(r'The derivative of $x^2$') ← WILL CRASH\n"
+                "  RIGHT: Text('The derivative of x²', font_size=36)\n\n"
+
+                "===================================================\n"
                 "  MANIM QUICK REFERENCE\n"
                 "===================================================\n\n"
 
@@ -90,12 +112,10 @@ class GraniteTasks:
                 "  Circle(), Square(), Rectangle(), Line(), Arrow(), Dot(),\n"
                 "  Polygon(), Arc(), Annulus(), Triangle(), Star()\n\n"
 
-                "TEXT & MATH:\n"
-                "  Text('Hello')                      — regular text\n"
-                "  MathTex(r'\\\\frac{a}{b}')           — LaTeX math\n"
-                "  Tex(r'This is \\\\textbf{bold}')     — LaTeX text\n"
-                "  Always use raw strings (r'...') for LaTeX!\n"
-                "  Always use double backslashes (\\\\) for LaTeX commands!\n\n"
+                "TEXT (use ONLY Text, never MathTex or Tex):\n"
+                "  Text('Hello', font_size=36)    — regular text\n"
+                "  Text('x² + 1', font_size=36)   — math with Unicode\n"
+                "  Text('dy/dx', font_size=36)     — fractions as text\n\n"
 
                 "ANIMATIONS:\n"
                 "  self.play(Write(text))               — write text\n"
@@ -116,7 +136,7 @@ class GraniteTasks:
                 "AXES & GRAPHS:\n"
                 "  ax = Axes(x_range=[-3, 3], y_range=[-2, 2])\n"
                 "  graph = ax.plot(lambda x: x**2, color=BLUE)\n"
-                "  label = ax.get_x_axis_label('x')\n"
+                "  label = ax.get_x_axis_label(Text('x', font_size=24))\n"
                 "  DO NOT use ax.get_graph() — use ax.plot() instead!\n\n"
 
                 "GROUPING:\n"
@@ -127,12 +147,12 @@ class GraniteTasks:
                 "  COMMON PITFALLS -- AVOID THESE!\n"
                 "===================================================\n\n"
 
+                "WRONG: MathTex(anything)   -> RIGHT: Text('...') with Unicode\n"
+                "WRONG: Tex(anything)       -> RIGHT: Text('...')\n"
                 "WRONG: ShowCreation()      -> RIGHT: Create()\n"
                 "WRONG: TextMobject()       -> RIGHT: Text()\n"
-                "WRONG: TexMobject()        -> RIGHT: Tex() or MathTex()\n"
+                "WRONG: TexMobject()        -> RIGHT: Text()\n"
                 "WRONG: ax.get_graph()      -> RIGHT: ax.plot()\n"
-                "WRONG: get_graph_label()   -> RIGHT: Use MathTex with .next_to()\n"
-                "WRONG: Single backslash \\  -> RIGHT: Double backslash \\\\ in MathTex\n"
                 "WRONG: play(obj)           -> RIGHT: play(Create(obj)) or play(FadeIn(obj))\n"
                 "WRONG: Overlapping text    -> RIGHT: Use .shift() or .next_to() for spacing\n\n"
 
@@ -143,9 +163,10 @@ class GraniteTasks:
                 "After writing the code, use the `manim_code_executor` tool to "
                 "run it and generate the video.\n\n"
                 "If the code fails, READ THE ERROR MESSAGE CAREFULLY:\n"
-                "- If it says 'AttributeError', you likely used a deprecated API.\n"
-                "- If it says 'LaTeX error', check your MathTex escaping.\n"
-                "- If it says 'TypeError', check your function arguments.\n"
+                "- If it mentions 'FileNotFoundError' or 'LaTeX': you used MathTex or Tex — "
+                "replace ALL of them with Text() using Unicode symbols.\n"
+                "- If it says 'AttributeError': you likely used a deprecated API.\n"
+                "- If it says 'TypeError': check your function arguments.\n"
                 "Fix the code and retry. You have up to 5 attempts.\n\n"
                 "Your FINAL ANSWER must be the file path of the generated .mp4 video."
             ),

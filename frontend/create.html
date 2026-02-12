@@ -1,260 +1,205 @@
 <!doctype html>
 
 <html class="dark" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>GRANITE | Create Project</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              primary: "#0df233",
-              "background-light": "#f5f8f6",
-              "background-dark": "#000000", // Pitch black as requested
-              "neutral-900": "#0a0c0a",
-              "neutral-800": "#151815",
-              "neutral-700": "#2a2e2a",
-            },
-            fontFamily: {
-              display: ["Space Grotesk", "sans-serif"],
-            },
-            borderRadius: {
-              DEFAULT: "1rem",
-              lg: "2rem",
-              xl: "3rem",
-              full: "9999px",
-            },
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>GRANITE | Create Project</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#0df233",
+            "background-light": "#f5f8f6",
+            "background-dark": "#000000", // Pitch black as requested
+            "neutral-900": "#0a0c0a",
+            "neutral-800": "#151815",
+            "neutral-700": "#2a2e2a",
+          },
+          fontFamily: {
+            display: ["Space Grotesk", "sans-serif"],
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            lg: "2rem",
+            xl: "3rem",
+            full: "9999px",
           },
         },
-      };
-    </script>
-    <style>
-      body {
-        background-image:
-          linear-gradient(rgba(13, 242, 51, 0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(13, 242, 51, 0.03) 1px, transparent 1px);
-        background-size: 40px 40px;
-      }
-      .glow-hover:hover {
-        box-shadow: 0 0 30px rgba(13, 242, 51, 0.2);
-      }
-      .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #0df233;
-        border-radius: 10px;
-      }
-    </style>
-  </head>
-  <body
-    class="bg-background-light dark:bg-background-dark font-display text-white min-h-screen selection:bg-primary selection:text-black"
-  >
-    <!-- Navigation Bar -->
-    <!-- Hidden File Input for "Add Asset" -->
-    <input
-      type="file"
-      id="file-upload"
-      class="hidden"
-      multiple
-      style="display: none"
-    />
+      },
+    };
+  </script>
+  <style>
+    body {
+      background-image:
+        linear-gradient(rgba(13, 242, 51, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(13, 242, 51, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
 
-    <!-- Top-Bar Pill Navigation -->
-    <nav class="fixed top-8 left-1/2 -translate-x-1/2 z-50">
-      <div
-        class="bg-neutral-800/80 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 flex items-center gap-8 shadow-2xl"
-      >
-        <a
-          href="homepage.html"
-          class="flex items-center gap-2 hover:opacity-80 transition-opacity"
-        >
-          <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-          <span class="font-bold tracking-tighter text-xl">GRANITE</span>
-        </a>
-        <div class="flex items-center gap-6 text-sm font-medium text-white/60">
-          <a class="hover:text-primary transition-colors" href="dashboard.html"
-            >Home</a
-          >
-          <a class="hover:text-primary transition-colors" href="library.html"
-            >Library</a
-          >
-          <a class="text-primary" href="create.html">Create</a>
-        </div>
-        <div class="h-6 w-[1px] bg-white/10"></div>
-        <button
-          class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
-        >
-          <span class="material-icons text-lg">person</span>
-        </button>
+    .glow-hover:hover {
+      box-shadow: 0 0 30px rgba(13, 242, 51, 0.2);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #0df233;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background-light dark:bg-background-dark font-display text-white min-h-screen selection:bg-primary selection:text-black">
+  <!-- Navigation Bar -->
+  <!-- Hidden File Input for "Add Asset" -->
+  <input type="file" id="file-upload" class="hidden" accept=".pdf" style="display: none" />
+
+  <!-- Top-Bar Pill Navigation -->
+  <nav class="fixed top-8 left-1/2 -translate-x-1/2 z-50">
+    <div
+      class="bg-neutral-800/80 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 flex items-center gap-8 shadow-2xl">
+      <a href="homepage.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
+        <span class="font-bold tracking-tighter text-xl">GRANITE</span>
+      </a>
+      <div class="flex items-center gap-6 text-sm font-medium text-white/60">
+        <a class="hover:text-primary transition-colors" href="dashboard.html">Home</a>
+        <a class="hover:text-primary transition-colors" href="library.html">Library</a>
+        <a class="text-primary" href="create.html">Create</a>
       </div>
-    </nav>
-    <main class="max-w-[1512px] mx-auto pt-32 px-12 pb-12">
-      <!-- Header -->
-      <header class="mb-12">
-        <h1 class="text-7xl font-bold tracking-tighter mb-4">
-          CREATE NEW <span class="text-primary italic">PROJECT</span>
-        </h1>
-        <p class="text-white/40 text-lg max-w-2xl">
-          Initialize your AI-driven production. Define your narrative or upload
-          your core assets to begin the generation process.
-        </p>
-      </header>
-      <!-- Modular Cards Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <!-- Left Module: Topic -->
-        <div
-          class="group relative bg-neutral-900 border-4 border-white/10 rounded-xl p-10 hover:border-primary transition-all duration-500 flex flex-col min-h-[500px]"
-        >
-          <div class="flex justify-between items-start mb-12">
-            <div>
-              <span
-                class="text-primary font-bold text-sm tracking-[0.3em] uppercase block mb-2"
-                >01. Step One</span
-              >
-              <h2 class="text-4xl font-bold">DESCRIBE TOPIC</h2>
-            </div>
-            <div
-              class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-colors"
-            >
-              <span class="material-icons">edit_note</span>
-            </div>
-          </div>
-          <div class="flex-grow flex flex-col">
-            <label
-              class="text-xs font-bold text-white/40 uppercase tracking-widest mb-4"
-              >Narrative Description</label
-            >
-            <textarea
-              class="flex-grow bg-black/40 border-2 border-white/5 rounded-lg p-6 text-xl font-light focus:border-primary focus:ring-0 transition-all outline-none resize-none custom-scrollbar"
-              placeholder="e.g. A cinematic documentary exploring the neon-lit streets of 2077 Tokyo, focusing on the intersection of ancient traditions and cybernetic evolution..."
-            ></textarea>
-            <div class="mt-6 flex flex-wrap gap-2">
-              <span
-                class="px-4 py-2 bg-white/5 rounded-full text-xs font-bold border border-white/10 hover:border-primary/50 cursor-pointer transition-all"
-                >#CINEMATIC</span
-              >
-              <span
-                class="px-4 py-2 bg-white/5 rounded-full text-xs font-bold border border-white/10 hover:border-primary/50 cursor-pointer transition-all"
-                >#DOCUMENTARY</span
-              >
-              <span
-                class="px-4 py-2 bg-white/5 rounded-full text-xs font-bold border border-white/10 hover:border-primary/50 cursor-pointer transition-all"
-                >#CYBERPUNK</span
-              >
-            </div>
-          </div>
-        </div>
-        <!-- Right Module: Upload -->
-        <div
-          class="group relative bg-neutral-900 border-4 border-white/10 rounded-xl p-10 hover:border-primary transition-all duration-500 flex flex-col min-h-[500px]"
-        >
-          <div class="flex justify-between items-start mb-12">
-            <div>
-              <span
-                class="text-primary font-bold text-sm tracking-[0.3em] uppercase block mb-2"
-                >02. Step Two</span
-              >
-              <h2 class="text-4xl font-bold">ADD ASSETS</h2>
-            </div>
-            <div
-              class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-colors"
-            >
-              <span class="material-icons">cloud_upload</span>
-            </div>
+      <div class="h-6 w-[1px] bg-white/10"></div>
+      <button
+        class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+        <span class="material-icons text-lg">person</span>
+      </button>
+    </div>
+  </nav>
+  <main class="max-w-[1512px] mx-auto pt-32 px-12 pb-12">
+    <!-- Header -->
+    <header class="mb-12">
+      <h1 class="text-7xl font-bold tracking-tighter mb-4">
+        CREATE NEW <span class="text-primary italic">PROJECT</span>
+      </h1>
+      <p class="text-white/40 text-lg max-w-2xl">
+        Initialize your AI-driven production. Define your narrative or upload
+        your core assets to begin the generation process.
+      </p>
+    </header>
+    <!-- Modular Cards Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <!-- Left Module: Topic -->
+      <div
+        class="group relative bg-neutral-900 border-4 border-white/10 rounded-xl p-10 hover:border-primary transition-all duration-500 flex flex-col min-h-[500px]">
+        <div class="flex justify-between items-start mb-12">
+          <div>
+            <span class="text-primary font-bold text-sm tracking-[0.3em] uppercase block mb-2">01. Step One</span>
+            <h2 class="text-4xl font-bold">DESCRIBE TOPIC</h2>
           </div>
           <div
-            class="flex-grow border-2 border-dashed border-white/10 rounded-lg flex flex-col items-center justify-center group/drop hover:border-primary/50 transition-all cursor-pointer bg-black/20"
-          >
-            <div class="relative mb-6">
-              <div
-                class="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 group-hover/drop:bg-primary/40 transition-all"
-              ></div>
-              <span class="material-icons text-7xl text-primary relative"
-                >add_circle_outline</span
-              >
-            </div>
-            <p class="text-xl font-bold mb-2">Drag &amp; Drop Assets</p>
-            <p class="text-white/40 text-sm">or click to browse local files</p>
-            <div class="mt-8 flex gap-3">
-              <div
-                class="w-10 h-10 rounded bg-white/5 flex items-center justify-center border border-white/10"
-              >
-                <span class="material-icons text-sm text-white/40">image</span>
-              </div>
-              <div
-                class="w-10 h-10 rounded bg-white/5 flex items-center justify-center border border-white/10"
-              >
-                <span class="material-icons text-sm text-white/40">movie</span>
-              </div>
-              <div
-                class="w-10 h-10 rounded bg-white/5 flex items-center justify-center border border-white/10"
-              >
-                <span class="material-icons text-sm text-white/40"
-                  >audio_file</span
-                >
-              </div>
-            </div>
+            class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-colors">
+            <span class="material-icons">edit_note</span>
+          </div>
+        </div>
+        <div class="flex-grow flex flex-col">
+          <label class="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">Narrative Description</label>
+          <textarea id="topic-description"
+            class="flex-grow bg-black/40 border-2 border-white/5 rounded-lg p-6 text-xl font-light focus:border-primary focus:ring-0 transition-all outline-none resize-none custom-scrollbar"
+            placeholder="e.g. I want to understand the concept of derivatives and how they relate to the slope of a function..."></textarea>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span
+              class="px-4 py-2 bg-white/5 rounded-full text-xs font-bold border border-white/10 hover:border-primary/50 cursor-pointer transition-all">#CINEMATIC</span>
+            <span
+              class="px-4 py-2 bg-white/5 rounded-full text-xs font-bold border border-white/10 hover:border-primary/50 cursor-pointer transition-all">#DOCUMENTARY</span>
+            <span
+              class="px-4 py-2 bg-white/5 rounded-full text-xs font-bold border border-white/10 hover:border-primary/50 cursor-pointer transition-all">#CYBERPUNK</span>
           </div>
         </div>
       </div>
-      <!-- Footer / Generate Section -->
-      <div class="flex flex-col items-center gap-8">
+      <!-- Right Module: Upload -->
+      <div
+        class="group relative bg-neutral-900 border-4 border-white/10 rounded-xl p-10 hover:border-primary transition-all duration-500 flex flex-col min-h-[500px]">
+        <div class="flex justify-between items-start mb-12">
+          <div>
+            <span class="text-primary font-bold text-sm tracking-[0.3em] uppercase block mb-2">02. Step Two</span>
+            <h2 class="text-4xl font-bold">UPLOAD PDF</h2>
+          </div>
+          <div
+            class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-colors">
+            <span class="material-icons">cloud_upload</span>
+          </div>
+        </div>
         <div
-          class="flex items-center gap-8 text-white/40 text-sm font-bold tracking-[0.2em]"
-        >
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-primary"></div>
-            AI ENGINE READY
+          class="flex-grow border-2 border-dashed border-white/10 rounded-lg flex flex-col items-center justify-center group/drop hover:border-primary/50 transition-all cursor-pointer bg-black/20">
+          <div class="relative mb-6">
+            <div
+              class="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 group-hover/drop:bg-primary/40 transition-all">
+            </div>
+            <span class="material-icons text-7xl text-primary relative">add_circle_outline</span>
           </div>
-          <div class="w-px h-4 bg-white/10"></div>
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-primary"></div>
-            RESOURCES OPTIMIZED
-          </div>
-          <div class="w-px h-4 bg-white/10"></div>
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-primary"></div>
-            ESTIMATED TIME: 120s
+          <p class="text-xl font-bold mb-2">Drop Your PDF Here</p>
+          <p class="text-white/40 text-sm">or click to browse local files</p>
+          <div class="mt-8 flex gap-3">
+            <div class="w-10 h-10 rounded bg-white/5 flex items-center justify-center border border-white/10">
+              <span class="material-icons text-sm text-white/40">picture_as_pdf</span>
+            </div>
           </div>
         </div>
-        <button
-          class="w-full bg-primary text-black font-black text-3xl py-10 rounded-xl hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 shadow-[0_0_50px_rgba(13,242,51,0.3)] hover:shadow-[0_0_80px_rgba(13,242,51,0.5)] flex items-center justify-center gap-4 uppercase tracking-tighter"
-        >
-          Generate Video
-          <span class="material-icons text-4xl">bolt</span>
-        </button>
       </div>
-    </main>
-    <!-- Background Decoration -->
-    <div
-      class="fixed top-0 right-0 -z-10 w-[800px] h-[800px] bg-primary/5 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2"
-    ></div>
-    <div
-      class="fixed bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-primary/5 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2"
-    ></div>
-  </body>
+    </div>
+    <!-- Footer / Generate Section -->
+    <div class="flex flex-col items-center gap-8">
+      <div class="flex items-center gap-8 text-white/40 text-sm font-bold tracking-[0.2em]">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-primary"></div>
+          AI ENGINE READY
+        </div>
+        <div class="w-px h-4 bg-white/10"></div>
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-primary"></div>
+          RESOURCES OPTIMIZED
+        </div>
+        <div class="w-px h-4 bg-white/10"></div>
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-primary"></div>
+          ESTIMATED TIME: 120s
+        </div>
+      </div>
+      <button
+        class="w-full bg-primary text-black font-black text-3xl py-10 rounded-xl hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 shadow-[0_0_50px_rgba(13,242,51,0.3)] hover:shadow-[0_0_80px_rgba(13,242,51,0.5)] flex items-center justify-center gap-4 uppercase tracking-tighter">
+        Generate Video
+        <span class="material-icons text-4xl">bolt</span>
+      </button>
+    </div>
+  </main>
+  <!-- Background Decoration -->
+  <div
+    class="fixed top-0 right-0 -z-10 w-[800px] h-[800px] bg-primary/5 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2">
+  </div>
+  <div
+    class="fixed bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-primary/5 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2">
+  </div>
+</body>
+
 </html>

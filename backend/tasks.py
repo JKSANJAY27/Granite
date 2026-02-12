@@ -14,7 +14,17 @@ class GraniteTasks:
 
     # ── 1. Content Extraction ──────────────────────────────────────────
     @staticmethod
-    def extraction_task(agent, user_input: str) -> Task:
+    def extraction_task(agent, user_input: str, user_description: str = "") -> Task:
+        # Build the user-focus addendum when a description is provided
+        focus_addendum = ""
+        if user_description.strip():
+            focus_addendum = (
+                f"\n\nUSER FOCUS REQUEST:\n"
+                f"The user specifically wants to understand: \"{user_description}\"\n"
+                "Prioritise extracting and explaining content related to this request. "
+                "Tailor the summary to address what the user is asking about."
+            )
+
         return Task(
             description=(
                 f"Analyse the following user input and extract the core educational content.\n\n"
@@ -27,6 +37,7 @@ class GraniteTasks:
                 "- Key concepts and definitions\n"
                 "- Important formulas or relationships\n"
                 "- Suggested visual elements for animation"
+                f"{focus_addendum}"
             ),
             expected_output=(
                 "A structured content summary with clearly labelled sections: "

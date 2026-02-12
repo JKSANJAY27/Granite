@@ -91,8 +91,10 @@ class GraniteCrew:
     MAX_RETRIES = 5
     BASE_WAIT_SECONDS = 30  # doubles each retry: 30, 60, 120, 240...
 
-    def __init__(self, topic: str):
+    def __init__(self, topic: str, user_description: str = "", task_callback=None):
         self.topic = topic
+        self.user_description = user_description
+        self.task_callback = task_callback
         self.job_dir = self._create_job_dir(topic)
 
     @staticmethod
@@ -120,14 +122,14 @@ class GraniteCrew:
 
         tasks = GraniteTasks()
 
-        extraction  = tasks.extraction_task(content_extractor, self.topic)
+        extraction  = tasks.extraction_task(content_extractor, self.topic, self.user_description)
         planning    = tasks.planning_task(lesson_planner, extraction)
         animation   = tasks.animation_task(manim_animator, planning)
         narration   = tasks.narration_task(narrator, planning)
         composition = tasks.composition_task(video_composer, animation, narration)
         qa          = tasks.quality_check_task(quality_checker, composition)
 
-        crew = Crew(
+        crew_kwargs = dict(
             agents=[
                 content_extractor,
                 lesson_planner,
@@ -147,6 +149,10 @@ class GraniteCrew:
             process=Process.sequential,
             verbose=True,
         )
+        if self.task_callback:
+            crew_kwargs["task_callback"] = self.task_callback
+
+        crew = Crew(**crew_kwargs)
         return crew
 
     def run(self):

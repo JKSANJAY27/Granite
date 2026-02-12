@@ -1,45 +1,44 @@
 <!doctype html>
 <html class="dark" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>GRANITE Pipeline Status</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "primary-neon": "#B6FF33",
-              "background-dark": "#000000",
-              "card-dark": "#0A0A0A",
-              "border-dark": "#1A1A1A",
-            },
-            fontFamily: {
-              display: ["Space Grotesk", "sans-serif"],
-              mono: ["JetBrains Mono", "monospace"],
-            },
-            borderRadius: {
-              card: "2rem",
-              pill: "9999px",
-            },
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>GRANITE Pipeline Status</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-neon": "#B6FF33",
+            "background-dark": "#000000",
+            "card-dark": "#0A0A0A",
+            "border-dark": "#1A1A1A",
+          },
+          fontFamily: {
+            display: ["Space Grotesk", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"],
+          },
+          borderRadius: {
+            card: "2rem",
+            pill: "9999px",
           },
         },
-      };
-    </script>
-    <style type="text/tailwindcss">
-      :root {
+      },
+    };
+  </script>
+  <style type="text/tailwindcss">
+    :root {
         --neon-green: #b6ff33;
       }
       body {
@@ -72,564 +71,366 @@
         border-radius: 10px;
       }
     </style>
-  </head>
-  <body
-    class="bg-background-dark text-white font-display antialiased min-h-screen flex flex-col"
-  >
-    <!-- Top-Bar Pill Navigation -->
-    <nav class="fixed top-8 left-1/2 -translate-x-1/2 z-50">
-      <div
-        class="bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 flex items-center gap-8 shadow-2xl"
-      >
-        <a
-          href="homepage.html"
-          class="flex items-center gap-2 hover:opacity-80 transition-opacity"
-        >
-          <div class="w-3 h-3 bg-primary-neon rounded-full animate-pulse"></div>
-          <span class="font-bold tracking-tighter text-xl">GRANITE</span>
-        </a>
-        <div class="flex items-center gap-6 text-sm font-medium text-white/60">
-          <a
-            class="hover:text-primary-neon transition-colors"
-            href="dashboard.html"
-            >Home</a
-          >
-          <a
-            class="hover:text-primary-neon transition-colors"
-            href="library.html"
-            >Library</a
-          >
-          <a
-            class="hover:text-primary-neon transition-colors"
-            href="create.html"
-            >Create</a
-          >
+</head>
+
+<body class="bg-background-dark text-white font-display antialiased min-h-screen flex flex-col">
+  <!-- Top-Bar Pill Navigation -->
+  <nav class="fixed top-8 left-1/2 -translate-x-1/2 z-50">
+    <div
+      class="bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 flex items-center gap-8 shadow-2xl">
+      <a href="homepage.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-3 h-3 bg-primary-neon rounded-full animate-pulse"></div>
+        <span class="font-bold tracking-tighter text-xl">GRANITE</span>
+      </a>
+      <div class="flex items-center gap-6 text-sm font-medium text-white/60">
+        <a class="hover:text-primary-neon transition-colors" href="dashboard.html">Home</a>
+        <a class="hover:text-primary-neon transition-colors" href="library.html">Library</a>
+        <a class="hover:text-primary-neon transition-colors" href="create.html">Create</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Top Progress Bar (Fixed) -->
+  <div class="fixed top-0 left-0 w-full h-1 bg-zinc-900 z-[60]">
+    <div id="top-progress-bar" class="h-full bg-primary-neon neon-shadow"
+      style="width: 0%; transition: width 0.5s ease-out;"></div>
+  </div>
+
+  <style>
+    @keyframes progressFill {
+      0% {
+        width: 0%;
+      }
+
+      100% {
+        width: 100%;
+      }
+    }
+
+    .animate-progress {
+      animation: progressFill 4s linear forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .pipeline-step {
+      opacity: 0;
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .delay-100 {
+      animation-delay: 0.2s;
+    }
+
+    .delay-200 {
+      animation-delay: 0.8s;
+    }
+
+    .delay-300 {
+      animation-delay: 1.6s;
+    }
+
+    .delay-400 {
+      animation-delay: 2.4s;
+    }
+
+    .delay-500 {
+      animation-delay: 3.2s;
+    }
+  </style>
+
+  <div class="flex-grow p-8 mt-24">
+    <!-- Added top margin for nav -->
+    <header class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+      <div>
+        <h1 class="text-5xl font-bold tracking-tighter text-white mb-2">
+          PIPELINE <span class="text-primary-neon">ACTIVE</span>
+        </h1>
+        <div class="flex items-center gap-3">
+          <span id="stage-badge"
+            class="px-3 py-1 bg-primary-neon/10 text-primary-neon text-[10px] font-bold uppercase tracking-widest rounded-pill border border-primary-neon/20">Initialising</span>
+          <span id="status-label" class="text-zinc-500 text-[10px] font-mono uppercase tracking-[0.2em]">Waiting for
+            pipeline start</span>
         </div>
       </div>
-    </nav>
+      <div class="text-right font-mono">
+        <div class="text-[10px] text-zinc-500 mb-1 uppercase tracking-widest">
+          Global Status
+        </div>
+        <div class="flex items-center gap-2 justify-end">
+          <div class="w-2 h-2 rounded-full bg-primary-neon animate-pulse"></div>
+          <span class="text-sm font-bold text-white tracking-tight">SYSTEMS_OPTIMAL</span>
+        </div>
+      </div>
+    </header>
 
-    <!-- Top Progress Bar (Fixed) -->
-    <div class="fixed top-0 left-0 w-full h-1 bg-zinc-900 z-[60]">
-      <div
-        class="h-full bg-primary-neon neon-shadow animate-progress"
-        style="width: 0%"
-      ></div>
-    </div>
-
-    <style>
-      @keyframes progressFill {
-        0% {
-          width: 0%;
-        }
-        100% {
-          width: 100%;
-        }
-      }
-      .animate-progress {
-        animation: progressFill 4s linear forwards;
-      }
-
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .pipeline-step {
-        opacity: 0;
-        animation: fadeInUp 0.6s ease-out forwards;
-      }
-
-      .delay-100 {
-        animation-delay: 0.2s;
-      }
-      .delay-200 {
-        animation-delay: 0.8s;
-      }
-      .delay-300 {
-        animation-delay: 1.6s;
-      }
-      .delay-400 {
-        animation-delay: 2.4s;
-      }
-      .delay-500 {
-        animation-delay: 3.2s;
-      }
-    </style>
-
-    <div class="flex-grow p-8 mt-24">
-      <!-- Added top margin for nav -->
-      <header
-        class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
-      >
-        <div>
-          <h1 class="text-5xl font-bold tracking-tighter text-white mb-2">
-            PIPELINE <span class="text-primary-neon">ACTIVE</span>
-          </h1>
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full items-start">
+      <aside class="hidden lg:block lg:col-span-3 space-y-4">
+        <div class="bg-card-dark border border-border-dark p-6 rounded-card">
+          <h3 class="text-zinc-500 text-[10px] tracking-[0.3em] uppercase mb-6 font-bold">
+            Metadata
+          </h3>
+          <div class="space-y-6">
+            <div>
+              <div class="text-zinc-600 text-[10px] uppercase mb-2 font-mono">
+                Source_Hash
+              </div>
+              <div id="source-hash"
+                class="text-sm font-medium text-white truncate font-mono bg-zinc-900/50 p-2 rounded-lg border border-zinc-800">
+                —
+              </div>
+            </div>
+            <div>
+              <div class="text-zinc-600 text-[10px] uppercase mb-2 font-mono">
+                Engine_Spec
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary-neon text-sm">terminal</span>
+                <span class="text-sm font-bold text-white">MANIM v0.18.0</span>
+              </div>
+            </div>
+            <div>
+              <div class="text-zinc-600 text-[10px] uppercase mb-3 font-mono">
+                Intensity
+              </div>
+              <div class="flex gap-1.5 h-1.5">
+                <div class="flex-grow bg-primary-neon rounded-full"></div>
+                <div class="flex-grow bg-primary-neon rounded-full"></div>
+                <div class="flex-grow bg-primary-neon rounded-full"></div>
+                <div class="flex-grow bg-zinc-800 rounded-full"></div>
+                <div class="flex-grow bg-zinc-800 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-card-dark border border-border-dark p-6 rounded-card">
+          <h3 class="text-zinc-500 text-[10px] tracking-[0.3em] uppercase mb-6 font-bold">
+            Hardware
+          </h3>
+          <div class="space-y-5">
+            <div class="flex justify-between items-end mb-1">
+              <span class="text-[10px] font-mono text-zinc-500">VRAM LOAD</span>
+              <span class="text-xs font-bold font-mono text-primary-neon">35%</span>
+            </div>
+            <div class="w-full h-4 bg-zinc-900 rounded-pill overflow-hidden p-1 border border-zinc-800">
+              <div class="h-full bg-primary-neon rounded-pill" style="width: 35%"></div>
+            </div>
+            <div class="text-[10px] font-mono text-zinc-600 text-right uppercase">
+              8.4 / 24.0 GB
+            </div>
+          </div>
+        </div>
+      </aside>
+      <div class="lg:col-span-6 flex flex-col items-center relative py-4">
+        <div class="hidden lg:block absolute top-10 bottom-10 left-1/2 -translate-x-1/2 w-1 pipeline-track"></div>
+        <div class="flex flex-col gap-8 w-full relative z-10">
+          <!-- Step 1: Extractor -->
+          <div id="step-extraction" class="grid grid-cols-11 items-center gap-4 pipeline-step delay-100">
+            <div class="col-span-4 text-right hidden lg:block">
+              <span
+                class="px-3 py-1 bg-primary-neon/10 text-primary-neon text-[9px] font-bold uppercase tracking-widest rounded-pill border border-primary-neon/20">Success</span>
+            </div>
+            <div class="col-span-2 lg:col-span-3 flex justify-center">
+              <div class="w-16 h-16 bg-primary-neon rounded-2xl flex items-center justify-center border-4 border-black">
+                <span class="material-symbols-outlined text-black font-bold">database</span>
+              </div>
+            </div>
+            <div class="col-span-9 lg:col-span-4">
+              <h4 class="text-sm font-bold tracking-wider text-white uppercase">
+                Extractor
+              </h4>
+              <p class="text-[10px] text-zinc-500 font-mono">
+                Data mapping finalized
+              </p>
+            </div>
+          </div>
+          <!-- Step 2: Planner -->
+          <div id="step-planning" class="grid grid-cols-11 items-center gap-4 pipeline-step delay-200">
+            <div class="col-span-4 text-right hidden lg:block">
+              <span
+                class="px-3 py-1 bg-primary-neon/10 text-primary-neon text-[9px] font-bold uppercase tracking-widest rounded-pill border border-primary-neon/20">Success</span>
+            </div>
+            <div class="col-span-2 lg:col-span-3 flex justify-center">
+              <div class="w-16 h-16 bg-primary-neon rounded-2xl flex items-center justify-center border-4 border-black">
+                <span class="material-symbols-outlined text-black font-bold">architecture</span>
+              </div>
+            </div>
+            <div class="col-span-9 lg:col-span-4">
+              <h4 class="text-sm font-bold tracking-wider text-white uppercase">
+                Planner
+              </h4>
+              <p class="text-[10px] text-zinc-500 font-mono">
+                Timeline logic cached
+              </p>
+            </div>
+          </div>
+          <!-- Step 3: Animator (Active) -->
+          <div id="step-animation"
+            class="grid grid-cols-11 items-center gap-4 pipeline-step delay-300 opacity-50 grayscale">
+            <div class="col-span-4 text-right hidden lg:block">
+              <span
+                class="step-badge px-3 py-1 bg-zinc-800 text-zinc-500 text-[9px] font-bold uppercase tracking-widest rounded-pill">Wait</span>
+            </div>
+            <div class="col-span-2 lg:col-span-3 flex justify-center">
+              <div
+                class="step-icon w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border-2 border-zinc-800">
+                <span class="material-symbols-outlined text-zinc-600">movie_filter</span>
+              </div>
+            </div>
+            <div class="col-span-9 lg:col-span-4">
+              <h4 class="text-sm font-bold tracking-wider text-zinc-500 uppercase">
+                Animator
+              </h4>
+              <p class="step-desc text-[10px] text-zinc-700 font-mono">
+                Awaiting scene plan
+              </p>
+            </div>
+          </div>
+          <!-- Step 4: Narrator -->
+          <div id="step-narration"
+            class="grid grid-cols-11 items-center gap-4 opacity-50 grayscale pipeline-step delay-400">
+            <div class="col-span-4 text-right hidden lg:block">
+              <span
+                class="px-3 py-1 bg-zinc-800 text-zinc-500 text-[9px] font-bold uppercase tracking-widest rounded-pill">Wait</span>
+            </div>
+            <div class="col-span-2 lg:col-span-3 flex justify-center">
+              <div class="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border-2 border-zinc-800">
+                <span class="material-symbols-outlined text-zinc-600">mic</span>
+              </div>
+            </div>
+            <div class="col-span-9 lg:col-span-4">
+              <h4 class="text-sm font-bold tracking-wider text-zinc-500 uppercase">
+                Narrator
+              </h4>
+              <p class="text-[10px] text-zinc-700 font-mono">Sync required</p>
+            </div>
+          </div>
+          <!-- Step 5: Composer -->
+          <div id="step-composition"
+            class="grid grid-cols-11 items-center gap-4 opacity-50 grayscale pipeline-step delay-400">
+            <div class="col-span-4 text-right hidden lg:block">
+              <span
+                class="px-3 py-1 bg-zinc-800 text-zinc-500 text-[9px] font-bold uppercase tracking-widest rounded-pill">Wait</span>
+            </div>
+            <div class="col-span-2 lg:col-span-3 flex justify-center">
+              <div class="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border-2 border-zinc-800">
+                <span class="material-symbols-outlined text-zinc-600">music_note</span>
+              </div>
+            </div>
+            <div class="col-span-9 lg:col-span-4">
+              <h4 class="text-sm font-bold tracking-wider text-zinc-500 uppercase">
+                Composer
+              </h4>
+              <p class="text-[10px] text-zinc-700 font-mono">Awaiting mood</p>
+            </div>
+          </div>
+          <!-- Step 6: Checker -->
+          <div id="step-quality"
+            class="grid grid-cols-11 items-center gap-4 opacity-50 grayscale pipeline-step delay-500">
+            <div class="col-span-4 text-right hidden lg:block">
+              <span
+                class="px-3 py-1 bg-zinc-800 text-zinc-500 text-[9px] font-bold uppercase tracking-widest rounded-pill">Wait</span>
+            </div>
+            <div class="col-span-2 lg:col-span-3 flex justify-center">
+              <div class="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border-2 border-zinc-800">
+                <span class="material-symbols-outlined text-zinc-600">verified_user</span>
+              </div>
+            </div>
+            <div class="col-span-9 lg:col-span-4">
+              <h4 class="text-sm font-bold tracking-wider text-zinc-500 uppercase">
+                Checker
+              </h4>
+              <p class="text-[10px] text-zinc-700 font-mono">Final audit</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-3 space-y-4">
+        <div class="bg-card-dark border border-border-dark rounded-card overflow-hidden">
+          <div class="aspect-video relative">
+            <img alt="Preview" class="w-full h-full object-cover grayscale opacity-50"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuChRfbauJCU_OYkDgDp5pkKsqZ0dfTpEFg7gdJFMJPTjnvUEHd69Bwd8Weoq-TBrAZ8jzJj7Ba9ZF9X05I-1PacMhevdmYGMGLytW3dTDSh02U8LEnZSRzZsewby1lhU987A3rNfzfgef674tKGe_IFKS2FMBa-ArPCxlZ_WHKSJmnHh8wGbPETodU5NGYK2mj2xjNH0zy72ZQhlhh7syccvDZRXtdcVSqEr47B0bWPx42C6qkkvuqqCrEdLZFe2wJvzhj2wqSReCk" />
+            <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center">
+              <div class="w-12 h-12 rounded-full border-2 border-primary-neon/40 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary-neon animate-spin">sync</span>
+              </div>
+              <span class="text-[10px] font-mono text-primary-neon mt-2 uppercase tracking-tighter">Live Stream</span>
+            </div>
+            <div class="absolute bottom-2 left-2 flex gap-1">
+              <div class="w-1 h-1 bg-primary-neon"></div>
+              <div class="w-1 h-1 bg-primary-neon"></div>
+              <div class="w-1 h-1 bg-primary-neon/30"></div>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-end mb-3 font-mono">
+              <span class="text-[10px] text-zinc-500 uppercase">Overall Progress</span>
+              <span id="progress-label" class="text-xs font-bold text-white tracking-widest">0%</span>
+            </div>
+            <div class="w-full h-3 bg-zinc-900 rounded-pill overflow-hidden border border-zinc-800 p-0.5">
+              <div id="frame-progress-bar" class="h-full bg-primary-neon rounded-pill"
+                style="width: 0%; transition: width 0.5s ease-out;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-card-dark border border-border-dark p-6 rounded-card">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">System Load</span>
+            <span class="material-symbols-outlined text-primary-neon text-sm">bolt</span>
+          </div>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center text-[10px] font-mono">
+              <span class="text-zinc-600">CPU LOAD</span>
+              <span class="text-white">62.4%</span>
+            </div>
+            <div class="flex justify-between items-center text-[10px] font-mono">
+              <span class="text-zinc-600">LATENCY</span>
+              <span class="text-white">12ms</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="mt-8">
+      <div class="bg-black border border-primary-neon/20 rounded-2xl overflow-hidden neon-shadow">
+        <div class="bg-zinc-950 border-b border-border-dark px-6 py-3 flex items-center justify-between">
           <div class="flex items-center gap-3">
+            <div class="flex gap-1.5">
+              <div class="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+            </div>
             <span
-              class="px-3 py-1 bg-primary-neon/10 text-primary-neon text-[10px] font-bold uppercase tracking-widest rounded-pill border border-primary-neon/20"
-              >Stage 02</span
-            >
-            <span
-              class="text-zinc-500 text-[10px] font-mono uppercase tracking-[0.2em]"
-              >Processing Sequence Alpha-9</span
-            >
+              class="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-[0.4em] ml-2">Pipeline_Terminal.log</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-[9px] font-mono text-primary-neon px-2 py-0.5 bg-primary-neon/10 rounded uppercase">Output
+              Level: Debug</span>
+            <span class="material-symbols-outlined text-zinc-500 text-sm cursor-pointer">close_fullscreen</span>
           </div>
         </div>
-        <div class="text-right font-mono">
-          <div class="text-[10px] text-zinc-500 mb-1 uppercase tracking-widest">
-            Global Status
-          </div>
-          <div class="flex items-center gap-2 justify-end">
-            <div
-              class="w-2 h-2 rounded-full bg-primary-neon animate-pulse"
-            ></div>
-            <span class="text-sm font-bold text-white tracking-tight"
-              >SYSTEMS_OPTIMAL</span
-            >
+        <div id="terminal-log" class="p-6 font-mono text-[11px] leading-relaxed max-h-48 overflow-y-auto bg-black">
+          <div class="space-y-1.5">
+            <div class="flex gap-6">
+              <span class="text-zinc-700">[--:--:--.---]</span>
+              <span class="text-primary-neon font-bold uppercase">[System]</span>
+              <span class="text-zinc-400">Waiting for pipeline to start...</span>
+            </div>
           </div>
         </div>
-      </header>
+      </div>
+    </footer>
+  </div>
+</body>
 
-      <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full items-start">
-        <aside class="hidden lg:block lg:col-span-3 space-y-4">
-          <div class="bg-card-dark border border-border-dark p-6 rounded-card">
-            <h3
-              class="text-zinc-500 text-[10px] tracking-[0.3em] uppercase mb-6 font-bold"
-            >
-              Metadata
-            </h3>
-            <div class="space-y-6">
-              <div>
-                <div class="text-zinc-600 text-[10px] uppercase mb-2 font-mono">
-                  Source_Hash
-                </div>
-                <div
-                  class="text-sm font-medium text-white truncate font-mono bg-zinc-900/50 p-2 rounded-lg border border-zinc-800"
-                >
-                  QFD_001.mp4
-                </div>
-              </div>
-              <div>
-                <div class="text-zinc-600 text-[10px] uppercase mb-2 font-mono">
-                  Engine_Spec
-                </div>
-                <div class="flex items-center gap-2">
-                  <span
-                    class="material-symbols-outlined text-primary-neon text-sm"
-                    >terminal</span
-                  >
-                  <span class="text-sm font-bold text-white"
-                    >MANIM v0.18.0</span
-                  >
-                </div>
-              </div>
-              <div>
-                <div class="text-zinc-600 text-[10px] uppercase mb-3 font-mono">
-                  Intensity
-                </div>
-                <div class="flex gap-1.5 h-1.5">
-                  <div class="flex-grow bg-primary-neon rounded-full"></div>
-                  <div class="flex-grow bg-primary-neon rounded-full"></div>
-                  <div class="flex-grow bg-primary-neon rounded-full"></div>
-                  <div class="flex-grow bg-zinc-800 rounded-full"></div>
-                  <div class="flex-grow bg-zinc-800 rounded-full"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="bg-card-dark border border-border-dark p-6 rounded-card">
-            <h3
-              class="text-zinc-500 text-[10px] tracking-[0.3em] uppercase mb-6 font-bold"
-            >
-              Hardware
-            </h3>
-            <div class="space-y-5">
-              <div class="flex justify-between items-end mb-1">
-                <span class="text-[10px] font-mono text-zinc-500"
-                  >VRAM LOAD</span
-                >
-                <span class="text-xs font-bold font-mono text-primary-neon"
-                  >35%</span
-                >
-              </div>
-              <div
-                class="w-full h-4 bg-zinc-900 rounded-pill overflow-hidden p-1 border border-zinc-800"
-              >
-                <div
-                  class="h-full bg-primary-neon rounded-pill"
-                  style="width: 35%"
-                ></div>
-              </div>
-              <div
-                class="text-[10px] font-mono text-zinc-600 text-right uppercase"
-              >
-                8.4 / 24.0 GB
-              </div>
-            </div>
-          </div>
-        </aside>
-        <div class="lg:col-span-6 flex flex-col items-center relative py-4">
-          <div
-            class="hidden lg:block absolute top-10 bottom-10 left-1/2 -translate-x-1/2 w-1 pipeline-track"
-          ></div>
-          <div class="flex flex-col gap-8 w-full relative z-10">
-            <!-- Step 1: Extractor -->
-            <div
-              class="grid grid-cols-11 items-center gap-4 pipeline-step delay-100"
-            >
-              <div class="col-span-4 text-right hidden lg:block">
-                <span
-                  class="px-3 py-1 bg-primary-neon/10 text-primary-neon text-[9px] font-bold uppercase tracking-widest rounded-pill border border-primary-neon/20"
-                  >Success</span
-                >
-              </div>
-              <div class="col-span-2 lg:col-span-3 flex justify-center">
-                <div
-                  class="w-16 h-16 bg-primary-neon rounded-2xl flex items-center justify-center border-4 border-black"
-                >
-                  <span class="material-symbols-outlined text-black font-bold"
-                    >database</span
-                  >
-                </div>
-              </div>
-              <div class="col-span-9 lg:col-span-4">
-                <h4
-                  class="text-sm font-bold tracking-wider text-white uppercase"
-                >
-                  Extractor
-                </h4>
-                <p class="text-[10px] text-zinc-500 font-mono">
-                  Data mapping finalized
-                </p>
-              </div>
-            </div>
-            <!-- Step 2: Planner -->
-            <div
-              class="grid grid-cols-11 items-center gap-4 pipeline-step delay-200"
-            >
-              <div class="col-span-4 text-right hidden lg:block">
-                <span
-                  class="px-3 py-1 bg-primary-neon/10 text-primary-neon text-[9px] font-bold uppercase tracking-widest rounded-pill border border-primary-neon/20"
-                  >Success</span
-                >
-              </div>
-              <div class="col-span-2 lg:col-span-3 flex justify-center">
-                <div
-                  class="w-16 h-16 bg-primary-neon rounded-2xl flex items-center justify-center border-4 border-black"
-                >
-                  <span class="material-symbols-outlined text-black font-bold"
-                    >architecture</span
-                  >
-                </div>
-              </div>
-              <div class="col-span-9 lg:col-span-4">
-                <h4
-                  class="text-sm font-bold tracking-wider text-white uppercase"
-                >
-                  Planner
-                </h4>
-                <p class="text-[10px] text-zinc-500 font-mono">
-                  Timeline logic cached
-                </p>
-              </div>
-            </div>
-            <!-- Step 3: Animator (Active) -->
-            <div
-              class="grid grid-cols-11 items-center gap-4 pipeline-step delay-300"
-            >
-              <div class="col-span-4 text-right hidden lg:block">
-                <div
-                  class="inline-flex items-center gap-2 px-3 py-1 bg-white text-black text-[9px] font-black uppercase tracking-widest rounded-pill"
-                >
-                  <span
-                    class="w-1.5 h-1.5 bg-black rounded-full animate-ping"
-                  ></span>
-                  Processing
-                </div>
-              </div>
-              <div class="col-span-2 lg:col-span-3 flex justify-center">
-                <div
-                  class="w-20 h-20 bg-black rounded-3xl flex items-center justify-center border-2 neon-glow-border relative"
-                >
-                  <span
-                    class="material-symbols-outlined text-primary-neon text-3xl"
-                    >movie_filter</span
-                  >
-                  <div
-                    class="absolute -bottom-1 -right-1 w-5 h-5 bg-primary-neon rounded-full flex items-center justify-center shadow-lg"
-                  >
-                    <span
-                      class="material-symbols-outlined text-black text-[12px] font-bold"
-                      >settings</span
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="col-span-9 lg:col-span-4">
-                <h4
-                  class="text-lg font-bold tracking-tight text-white uppercase italic"
-                >
-                  Animator
-                </h4>
-                <p class="text-xs text-primary-neon font-mono animate-pulse">
-                  Rendering Script Alpha...
-                </p>
-              </div>
-            </div>
-            <!-- Step 4: Narrator -->
-            <div
-              class="grid grid-cols-11 items-center gap-4 opacity-50 grayscale pipeline-step delay-400"
-            >
-              <div class="col-span-4 text-right hidden lg:block">
-                <span
-                  class="px-3 py-1 bg-zinc-800 text-zinc-500 text-[9px] font-bold uppercase tracking-widest rounded-pill"
-                  >Wait</span
-                >
-              </div>
-              <div class="col-span-2 lg:col-span-3 flex justify-center">
-                <div
-                  class="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border-2 border-zinc-800"
-                >
-                  <span class="material-symbols-outlined text-zinc-600"
-                    >mic</span
-                  >
-                </div>
-              </div>
-              <div class="col-span-9 lg:col-span-4">
-                <h4
-                  class="text-sm font-bold tracking-wider text-zinc-500 uppercase"
-                >
-                  Narrator
-                </h4>
-                <p class="text-[10px] text-zinc-700 font-mono">Sync required</p>
-              </div>
-            </div>
-            <!-- Step 5: Composer -->
-            <div
-              class="grid grid-cols-11 items-center gap-4 opacity-50 grayscale pipeline-step delay-400"
-            >
-              <div class="col-span-4 text-right hidden lg:block">
-                <span
-                  class="px-3 py-1 bg-zinc-800 text-zinc-500 text-[9px] font-bold uppercase tracking-widest rounded-pill"
-                  >Wait</span
-                >
-              </div>
-              <div class="col-span-2 lg:col-span-3 flex justify-center">
-                <div
-                  class="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border-2 border-zinc-800"
-                >
-                  <span class="material-symbols-outlined text-zinc-600"
-                    >music_note</span
-                  >
-                </div>
-              </div>
-              <div class="col-span-9 lg:col-span-4">
-                <h4
-                  class="text-sm font-bold tracking-wider text-zinc-500 uppercase"
-                >
-                  Composer
-                </h4>
-                <p class="text-[10px] text-zinc-700 font-mono">Awaiting mood</p>
-              </div>
-            </div>
-            <!-- Step 6: Checker -->
-            <div
-              class="grid grid-cols-11 items-center gap-4 opacity-50 grayscale pipeline-step delay-500"
-            >
-              <div class="col-span-4 text-right hidden lg:block">
-                <span
-                  class="px-3 py-1 bg-zinc-800 text-zinc-500 text-[9px] font-bold uppercase tracking-widest rounded-pill"
-                  >Wait</span
-                >
-              </div>
-              <div class="col-span-2 lg:col-span-3 flex justify-center">
-                <div
-                  class="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border-2 border-zinc-800"
-                >
-                  <span class="material-symbols-outlined text-zinc-600"
-                    >verified_user</span
-                  >
-                </div>
-              </div>
-              <div class="col-span-9 lg:col-span-4">
-                <h4
-                  class="text-sm font-bold tracking-wider text-zinc-500 uppercase"
-                >
-                  Checker
-                </h4>
-                <p class="text-[10px] text-zinc-700 font-mono">Final audit</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="lg:col-span-3 space-y-4">
-          <div
-            class="bg-card-dark border border-border-dark rounded-card overflow-hidden"
-          >
-            <div class="aspect-video relative">
-              <img
-                alt="Preview"
-                class="w-full h-full object-cover grayscale opacity-50"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuChRfbauJCU_OYkDgDp5pkKsqZ0dfTpEFg7gdJFMJPTjnvUEHd69Bwd8Weoq-TBrAZ8jzJj7Ba9ZF9X05I-1PacMhevdmYGMGLytW3dTDSh02U8LEnZSRzZsewby1lhU987A3rNfzfgef674tKGe_IFKS2FMBa-ArPCxlZ_WHKSJmnHh8wGbPETodU5NGYK2mj2xjNH0zy72ZQhlhh7syccvDZRXtdcVSqEr47B0bWPx42C6qkkvuqqCrEdLZFe2wJvzhj2wqSReCk"
-              />
-              <div
-                class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center"
-              >
-                <div
-                  class="w-12 h-12 rounded-full border-2 border-primary-neon/40 flex items-center justify-center"
-                >
-                  <span
-                    class="material-symbols-outlined text-primary-neon animate-spin"
-                    >sync</span
-                  >
-                </div>
-                <span
-                  class="text-[10px] font-mono text-primary-neon mt-2 uppercase tracking-tighter"
-                  >Live Stream</span
-                >
-              </div>
-              <div class="absolute bottom-2 left-2 flex gap-1">
-                <div class="w-1 h-1 bg-primary-neon"></div>
-                <div class="w-1 h-1 bg-primary-neon"></div>
-                <div class="w-1 h-1 bg-primary-neon/30"></div>
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="flex justify-between items-end mb-3 font-mono">
-                <span class="text-[10px] text-zinc-500 uppercase"
-                  >Frame Progress</span
-                >
-                <span class="text-xs font-bold text-white tracking-widest"
-                  >1,244 / 3,600</span
-                >
-              </div>
-              <div
-                class="w-full h-3 bg-zinc-900 rounded-pill overflow-hidden border border-zinc-800 p-0.5"
-              >
-                <div
-                  class="h-full bg-primary-neon rounded-pill"
-                  style="width: 34%"
-                ></div>
-              </div>
-            </div>
-          </div>
-          <div class="bg-card-dark border border-border-dark p-6 rounded-card">
-            <div class="flex items-center justify-between mb-4">
-              <span
-                class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest"
-                >System Load</span
-              >
-              <span class="material-symbols-outlined text-primary-neon text-sm"
-                >bolt</span
-              >
-            </div>
-            <div class="space-y-4">
-              <div
-                class="flex justify-between items-center text-[10px] font-mono"
-              >
-                <span class="text-zinc-600">CPU LOAD</span>
-                <span class="text-white">62.4%</span>
-              </div>
-              <div
-                class="flex justify-between items-center text-[10px] font-mono"
-              >
-                <span class="text-zinc-600">LATENCY</span>
-                <span class="text-white">12ms</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-      <footer class="mt-8">
-        <div
-          class="bg-black border border-primary-neon/20 rounded-2xl overflow-hidden neon-shadow"
-        >
-          <div
-            class="bg-zinc-950 border-b border-border-dark px-6 py-3 flex items-center justify-between"
-          >
-            <div class="flex items-center gap-3">
-              <div class="flex gap-1.5">
-                <div class="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
-                <div class="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
-                <div class="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
-              </div>
-              <span
-                class="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-[0.4em] ml-2"
-                >Pipeline_Terminal.log</span
-              >
-            </div>
-            <div class="flex items-center gap-4">
-              <span
-                class="text-[9px] font-mono text-primary-neon px-2 py-0.5 bg-primary-neon/10 rounded uppercase"
-                >Output Level: Debug</span
-              >
-              <span
-                class="material-symbols-outlined text-zinc-500 text-sm cursor-pointer"
-                >close_fullscreen</span
-              >
-            </div>
-          </div>
-          <div
-            class="p-6 font-mono text-[11px] leading-relaxed max-h-48 overflow-y-auto bg-black"
-          >
-            <div class="space-y-1.5">
-              <div class="flex gap-6">
-                <span class="text-zinc-700">[14:22:01.042]</span>
-                <span class="text-primary-neon font-bold uppercase"
-                  >[Kernel]</span
-                >
-                <span class="text-zinc-400"
-                  >Booting Manim Runtime Environment...</span
-                >
-              </div>
-              <div class="flex gap-6">
-                <span class="text-zinc-700">[14:22:04.910]</span>
-                <span class="text-white font-bold uppercase">[Success]</span>
-                <span class="text-zinc-400"
-                  >Library: 'Numerical_Engine' initialized in 2.1s</span
-                >
-              </div>
-              <div class="flex gap-6">
-                <span class="text-zinc-700">[14:22:05.118]</span>
-                <span class="text-primary-neon font-bold uppercase"
-                  >[Task]</span
-                >
-                <span class="text-white font-bold tracking-tight"
-                  >Compiling Manim Script: 'fluid_dynamic_v2.py'</span
-                >
-              </div>
-              <div class="flex gap-6">
-                <span class="text-zinc-700">[14:22:07.442]</span>
-                <span class="text-zinc-500 uppercase">[Render]</span>
-                <span class="text-zinc-400"
-                  >Scene_01: Generating Vector Field Layers...</span
-                >
-              </div>
-              <div class="flex gap-6">
-                <span class="text-zinc-700">[14:22:12.821]</span>
-                <span class="text-zinc-500 uppercase">[Render]</span>
-                <span class="text-zinc-400"
-                  >Applying Turbulence Filter: frequency=0.65, octaves=3</span
-                >
-              </div>
-              <div class="flex gap-6">
-                <span class="text-zinc-700">[14:22:15.003]</span>
-                <span
-                  class="text-primary-neon animate-pulse font-bold tracking-widest"
-                  >_</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  </body>
 </html>

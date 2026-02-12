@@ -10,6 +10,9 @@ Docs: https://docs.crewai.com/concepts/crews
 import time
 import sys
 import os
+import re
+import uuid
+from datetime import datetime
 from pathlib import Path
 
 # ── Add local FFmpeg to PATH if present ──────────────────────────────
@@ -90,6 +93,19 @@ class GraniteCrew:
 
     def __init__(self, topic: str):
         self.topic = topic
+        self.job_dir = self._create_job_dir(topic)
+
+    @staticmethod
+    def _create_job_dir(topic: str) -> Path:
+        """Create a unique output directory for this pipeline run."""
+        # Slugify topic: lowercase, keep only alnum/underscore, max 30 chars
+        slug = re.sub(r'[^a-z0-9]+', '_', topic.lower()).strip('_')[:30]
+        ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+        uid = uuid.uuid4().hex[:4]
+        job_name = f"{slug}_{ts}_{uid}"
+        job_dir = Path("output_videos") / job_name
+        job_dir.mkdir(parents=True, exist_ok=True)
+        return job_dir
 
     def _build_crew(self):
         """Build agents, tasks, and the Crew object (fresh each attempt)."""
@@ -135,12 +151,17 @@ class GraniteCrew:
 
     def run(self):
         """Run the pipeline with automatic retries for transient errors."""
+        # Set the job directory so all tools write to the same isolated folder
+        os.environ["GRANITE_JOB_DIR"] = str(self.job_dir.resolve())
+        print(f"📁 Job output directory: {self.job_dir.resolve()}")
+
         for attempt in range(1, self.MAX_RETRIES + 1):
             try:
                 print(f"\n🚀 Pipeline attempt {attempt}/{self.MAX_RETRIES}")
                 crew = self._build_crew()
                 result = crew.kickoff()
                 print(f"\n✅ Pipeline completed successfully on attempt {attempt}")
+                print(f"📁 All outputs saved to: {self.job_dir.resolve()}")
                 return result
 
             except Exception as e:

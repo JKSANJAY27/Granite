@@ -475,6 +475,17 @@ class GraniteVideoGenerator:
         self.quality_checker = QualityCheckerAgent()
 
     async def generate_video(self, input_path: str, **options) -> FinalVideo:
+        # Set up isolated job directory for this run
+        import uuid
+        from datetime import datetime as dt
+        slug = re.sub(r'[^a-z0-9]+', '_', os.path.basename(input_path).lower())[:30]
+        ts = dt.now().strftime('%Y%m%d_%H%M%S')
+        uid = uuid.uuid4().hex[:4]
+        job_dir = Path("output_videos") / f"{slug}_{ts}_{uid}"
+        job_dir.mkdir(parents=True, exist_ok=True)
+        os.environ["GRANITE_JOB_DIR"] = str(job_dir.resolve())
+        print(f"📁 Job output directory: {job_dir.resolve()}")
+
         # Step 1: Extract content
         if input_path.endswith(".pdf"):
             text = await self.content_extractor.extract_from_pdf(input_path)

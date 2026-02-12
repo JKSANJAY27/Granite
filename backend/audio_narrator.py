@@ -216,8 +216,12 @@ class NarratorAgent(Agent):
     # ─── TTS synthesis ───────────────────────────────────────────────
     async def _synthesise_audio(self, text: str, voice_config: VoiceConfig) -> str:
         """Synthesise speech using LMNT (primary) or edge-tts/gTTS (fallback)."""
-        output_dir = Path("output_videos")
-        output_dir.mkdir(exist_ok=True)
+        job_dir = os.environ.get("GRANITE_JOB_DIR")
+        if job_dir:
+            output_dir = Path(job_dir)
+        else:
+            output_dir = Path("output_videos") / "default"
+        output_dir.mkdir(parents=True, exist_ok=True)
         output_path = str(output_dir / "narration.mp3")
 
         # Clean text for TTS

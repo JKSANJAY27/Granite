@@ -25,6 +25,17 @@ if _ffmpeg_bin.exists():
     os.environ["PATH"] = str(_ffmpeg_bin) + os.pathsep + os.environ.get("PATH", "")
 
 
+def _get_job_dir() -> Path:
+    """Return the current job output directory (set by crew.py/granite_unified_agent.py)."""
+    job_dir = os.environ.get("GRANITE_JOB_DIR")
+    if job_dir:
+        p = Path(job_dir)
+    else:
+        p = Path("output_videos") / "default"
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
 # ─────────────────────────────────────────────────────────
 # 1. PDF Content Extractor
 # ─────────────────────────────────────────────────────────
@@ -215,7 +226,9 @@ class ManimCodeExecutor(BaseTool):
     args_schema: Type[BaseModel] = ManimExecutorInput
 
     def _run(self, code: str) -> str:
-        scene_file = "granite_scene.py"
+        job_dir = _get_job_dir()
+        scene_file = str(job_dir / "granite_scene.py")
+        media_dir = str(job_dir / "media")
         try:
             # ── Pre-processing: Clean and validate the code ──────────
             code = self._preprocess_code(code)
@@ -237,7 +250,7 @@ class ManimCodeExecutor(BaseTool):
             command = [
                 "manim", "render",
                 "-ql",                      # low quality (480p15) — fast for iteration
-                "--media_dir", "media",
+                "--media_dir", media_dir,
                 scene_file,
                 "GraniteScene",
             ]
@@ -257,10 +270,10 @@ class ManimCodeExecutor(BaseTool):
                 if "File ready at" in line:
                     path = line.split("File ready at")[-1].strip().strip("'\". ")
                     if os.path.exists(path):
-                        return path
+                        return os.path.abspath(path)
 
-            # Fallback: search for most recent mp4 in media/
-            video_dir = os.path.join("media", "videos")
+            # Fallback: search for most recent mp4 in job media dir
+            video_dir = os.path.join(media_dir, "videos")
             if os.path.isdir(video_dir):
                 mp4_files = []
                 for root, _, files in os.walk(video_dir):
@@ -449,6 +462,10 @@ class LMNTTextToSpeech(BaseTool):
     args_schema: Type[BaseModel] = LMNTInput
 
     def _run(self, text: str, output_file: str = "narration.mp3") -> str:
+        # Resolve output_file into the current job directory
+        job_dir = _get_job_dir()
+        if not os.path.isabs(output_file):
+            output_file = str(job_dir / os.path.basename(output_file))
         # Method 1: LMNT (primary — high quality)
         result = self._try_lmnt(text, output_file)
         if result:
@@ -590,6 +607,10 @@ class VideoComposerTool(BaseTool):
         audio_path: str,
         output_path: str = "final_output.mp4",
     ) -> str:
+        # Resolve output_path into the current job directory
+        job_dir = _get_job_dir()
+        if not os.path.isabs(output_path):
+            output_path = str(job_dir / os.path.basename(output_path))
         # First try ffmpeg directly (more reliable, no ImageMagick needed)
         ffmpeg_result = self._try_ffmpeg(video_path, audio_path, output_path)
         if ffmpeg_result:

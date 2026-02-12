@@ -168,9 +168,10 @@ class GraniteTasks:
                 "- If it says 'AttributeError': you likely used a deprecated API.\n"
                 "- If it says 'TypeError': check your function arguments.\n"
                 "Fix the code and retry. You have up to 5 attempts.\n\n"
-                "Your FINAL ANSWER must be the file path of the generated .mp4 video."
+                "Your FINAL ANSWER must be the EXACT ABSOLUTE FILE PATH returned by the tool (e.g., C:/.../GraniteScene.mp4).\n"
+                "DO NOT make up a filename like 'media/manim_output.mp4'. USE THE TOOL OUTPUT."
             ),
-            expected_output="The file path of the generated Manim animation video (.mp4).",
+            expected_output="The absolute file path of the generated Manim animation video (.mp4).",
             agent=agent,
             context=[planning_task],
         )
@@ -189,9 +190,9 @@ class GraniteTasks:
                 "- Keep the tone engaging and educational\n\n"
                 "Then use the `lmnt_text_to_speech` tool to convert the "
                 "script into an audio file.\n\n"
-                "Your FINAL ANSWER must be the file path of the generated .mp3 audio file."
+                "Your FINAL ANSWER must be the absolute file path of the generated .mp3 audio file."
             ),
-            expected_output="The file path of the generated voiceover audio (.mp3).",
+            expected_output="The absolute file path of the generated voiceover audio (.mp3).",
             agent=agent,
             context=[planning_task],
         )
@@ -206,8 +207,8 @@ class GraniteTasks:
                 "Use the `video_composer` tool to combine them into a single "
                 "final video file.\n\n"
                 "IMPORTANT: Extract the exact file paths from the previous tasks' "
-                "results. The video_path should be an .mp4 file and the audio_path "
-                "should be an .mp3 file.\n\n"
+                "results. Do not guess filenames like 'media/manim_output.mp4'.\n"
+                "Use the paths explicitly provided in the Context.\n\n"
                 "Your FINAL ANSWER must be the file path of the final composed video."
             ),
             expected_output="The file path of the final composed video (.mp4).",

@@ -31,7 +31,7 @@ except ImportError:
 # Run the pipeline
 from crew import GraniteCrew
 
-pdf_path = os.path.abspath("../sample_calculus.pdf")
+pdf_path = os.path.abspath("../sample_math.pdf")
 print(f"\nPDF path: {pdf_path}")
 print(f"PDF exists: {os.path.exists(pdf_path)}")
 

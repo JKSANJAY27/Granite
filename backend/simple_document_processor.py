@@ -85,8 +85,12 @@ class SimpleDocumentProcessor:
             # Step 3: Write output
             if progress_callback:
                 await progress_callback("📝 Generating structured learning content...")
-            output_dir = Path("output_videos")
-            output_dir.mkdir(exist_ok=True)
+            job_dir = os.environ.get("GRANITE_JOB_DIR")
+            if job_dir:
+                output_dir = Path(job_dir)
+            else:
+                output_dir = Path("output_videos") / "default"
+            output_dir.mkdir(parents=True, exist_ok=True)
 
             output_file = output_dir / f"edu_content_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
             with open(output_file, "w", encoding="utf-8") as f:

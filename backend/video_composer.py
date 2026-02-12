@@ -80,8 +80,12 @@ class SimpleVideoComposer:
             return self._simulate_video_creation(lesson_plan, animations, narration)
 
         try:
-            output_dir = Path("output_videos")
-            output_dir.mkdir(exist_ok=True)
+            job_dir = os.environ.get("GRANITE_JOB_DIR")
+            if job_dir:
+                output_dir = Path(job_dir)
+            else:
+                output_dir = Path("output_videos") / "default"
+            output_dir.mkdir(parents=True, exist_ok=True)
 
             # Load audio
             audio_clip = None
@@ -206,8 +210,12 @@ class SimpleVideoComposer:
 
     # ─── Fallback ────────────────────────────────────────────────────
     def _simulate_video_creation(self, lesson_plan, animations, narration) -> Dict[str, Any]:
-        output_dir = Path("output_videos")
-        output_dir.mkdir(exist_ok=True)
+        job_dir = os.environ.get("GRANITE_JOB_DIR")
+        if job_dir:
+            output_dir = Path(job_dir)
+        else:
+            output_dir = Path("output_videos") / "default"
+        output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"demo_video_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
 
         with open(output_path, "w") as f:

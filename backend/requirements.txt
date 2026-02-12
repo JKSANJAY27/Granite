@@ -4,11 +4,12 @@ fastapi
 uvicorn[standard]
 python-multipart
 python-dotenv
-google-generativeai        # Gemini (free tier) - replaces Anthropic
+requests
+numpy
 
 # ─── Animation & Video ───────────────────────────────
 manim
-moviepy>=2.0                # v2 API: import from moviepy directly
+moviepy>=2.0                # v2 API
 ffmpeg-python
 
 # ─── Content Extraction ──────────────────────────────
@@ -16,17 +17,17 @@ pymupdf
 PyPDF2
 pytesseract
 Pillow
+pdf2image
+opencv-python
 
 # ─── Text-to-Speech ──────────────────────────────────
 lmnt                       # LMNT (primary — high quality)
-edge-tts                   # Microsoft Edge neural voices (free fallback)
-gTTS                       # Google TTS (free fallback)
+edge-tts                   # Free neural voices
+gTTS                       # Free generic voices
 
 # ─── Web Interface ───────────────────────────────────
 gradio
 
-# ─── Optional Enhancements ──────────────────────────
-aiohttp                    # Fetch.ai integration (optional)
-opencv-python              # Enhanced image processing (optional)
-pdf2image                  # PDF-to-image for Gemini Vision OCR (optional)
-pydantic                   # Data models
+# ─── Optional/Utils ─────────────────────────────────
+aiohttp
+pydantic
